@@ -2,6 +2,11 @@
 
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 type TowerHeights = { west: number; east: number };
 type BuilderLanguage = "en" | "bm";
@@ -285,11 +290,11 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
 
   return (
     <div className="builder-layout">
-      <div className="builder-main">
+      <Card className="builder-main">
         <div
           className="builder-canvas"
           ref={mountRef}
-          role="img"
+          role="group"
           aria-label="Interactive 3D model of two buildable towers. Drag left or right to rotate the view."
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -309,34 +314,40 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
               <span className="fallback-ground" />
             </div>
           )}
-          <span className="canvas-label">KL / 01 — TWIN TOWERS</span>
-          <span className="canvas-level-tag">A {heights.west} <i /> B {heights.east}</span>
+          <Badge variant="outline" className="canvas-label">KL / 01 — TWIN TOWERS</Badge>
+          <Badge variant="outline" className="canvas-level-tag">A {heights.west} <i /> B {heights.east}</Badge>
           <span className="canvas-hint">{copy.drag}</span>
           <div className="canvas-rotate-controls">
-            <button aria-label={copy.rotateLeft} onClick={() => rotateModel(-0.32)}><ArrowLeft size={16} /></button>
-            <button aria-label={copy.rotateRight} onClick={() => rotateModel(0.32)}><ArrowRight size={16} /></button>
+            <Button variant="outline" size="icon-sm" aria-label={copy.rotateLeft} onClick={() => rotateModel(-0.32)}><ArrowLeft size={16} /></Button>
+            <Button variant="outline" size="icon-sm" aria-label={copy.rotateRight} onClick={() => rotateModel(0.32)}><ArrowRight size={16} /></Button>
           </div>
         </div>
 
         <div className="builder-controls">
           <div className="builder-toolbar">
-            <div className="tower-selector" role="group" aria-label="Choose which tower to build">
-              <button className={selectedTower === "west" ? "is-active" : ""} onClick={() => setSelectedTower("west")} aria-pressed={selectedTower === "west"}>
+            <ToggleGroup
+              className="tower-selector"
+              type="single"
+              value={selectedTower}
+              onValueChange={(value) => { if (value === "west" || value === "east") setSelectedTower(value); }}
+              aria-label={language === "en" ? "Choose which tower to build" : "Pilih menara untuk dibina"}
+            >
+              <ToggleGroupItem value="west" aria-label={copy.towerA}>
                 <span className="tower-selector-dot tower-a-dot" />{copy.towerA}<span className="tower-level">{heights.west}/8</span>
-              </button>
-              <button className={selectedTower === "east" ? "is-active" : ""} onClick={() => setSelectedTower("east")} aria-pressed={selectedTower === "east"}>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="east" aria-label={copy.towerB}>
                 <span className="tower-selector-dot tower-b-dot" />{copy.towerB}<span className="tower-level">{heights.east}/8</span>
-              </button>
-            </div>
-            <button className="builder-add-button" onClick={addBrick} disabled={selectedHeight >= MAX_LEVELS}>
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <Button className="builder-add-button" onClick={addBrick} disabled={selectedHeight >= MAX_LEVELS}>
               <span className="plus-brick">+</span>{copy.addBrick}<span className="keycap">↵</span>
-            </button>
+            </Button>
           </div>
           <div className="build-progress-row">
             <span>{copy.progress}</span>
-            <div className="build-progress-track" role="progressbar" aria-label={copy.progress} aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}><span style={{ width: `${progress}%` }} /></div>
+            <Progress className="build-progress-track" value={progress} aria-label={copy.progress} />
             <span className="build-progress-number">{progress}%</span>
-            <button className="reset-build-button" onClick={resetBuild} aria-label={copy.reset}><RotateCcw size={14} /><span>{copy.reset}</span></button>
+            <Button variant="ghost" size="sm" className="reset-build-button" onClick={resetBuild} aria-label={copy.reset}><RotateCcw size={14} /><span>{copy.reset}</span></Button>
           </div>
           <p className={`bridge-status ${bridgeUnlocked ? "unlocked" : ""}`} role="status">
             <span className="bridge-status-dot" />
@@ -346,9 +357,9 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           {selectedHeight >= MAX_LEVELS && !full && <p className="builder-feedback" role="status">{copy.max}</p>}
           {full && <p className="builder-feedback complete" role="status">✦ Both towers complete. Nice work.</p>}
         </div>
-      </div>
+      </Card>
 
-      <aside className="tower-reference">
+      <Card className="tower-reference" role="complementary">
         <div className="reference-visual" aria-hidden="true">
           <div className="reference-tower tower-left"><span /><span /><span /><i /></div>
           <div className="reference-tower tower-right"><span /><span /><span /><i /></div>
@@ -356,15 +367,17 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           <div className="reference-ground" />
           <span className="reference-coordinate">3°09′N 101°42′E</span>
         </div>
-        <div className="reference-copy">
+        <CardContent className="reference-copy">
           <span className="reference-eyebrow">{copy.reference}</span>
           <h3>Petronas Twin Towers</h3>
           <p>{copy.referenceText}</p>
-          <a href="https://www.petronastwintowers.com.my/the-towers/design-structure/" target="_blank" rel="noreferrer">
-            {copy.source}<ArrowRight size={14} />
-          </a>
-        </div>
-      </aside>
+          <Button asChild variant="link" className="reference-source">
+            <a href="https://www.petronastwintowers.com.my/the-towers/design-structure/" target="_blank" rel="noreferrer">
+              {copy.source}<ArrowRight size={14} />
+            </a>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

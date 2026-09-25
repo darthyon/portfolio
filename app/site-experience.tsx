@@ -12,6 +12,15 @@ import {
   Sun,
   X,
 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   aboutNotes,
   folders,
@@ -127,22 +136,23 @@ function WorkPanel({
   const copy = sectionCopy[language];
 
   return (
-    <aside className="work-panel" aria-label={`${localizedFolder.name} panel`}>
-      <div className="panel-heading">
+    <Card className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
+      <CardHeader className="panel-heading">
         <div className="panel-title-wrap">
           <FolderOpen className="panel-folder-icon" size={30} strokeWidth={1.8} />
           <div>
-            <h3>{localizedFolder.name}</h3>
-            <p>{localizedFolder.description}</p>
+            <CardTitle><h3>{localizedFolder.name}</h3></CardTitle>
+            <CardDescription><p>{localizedFolder.description}</p></CardDescription>
           </div>
         </div>
-        <button className="icon-button close-panel" onClick={onClose} aria-label={copy.close}>
+        <Button variant="outline" size="icon" className="icon-button close-panel" onClick={onClose} aria-label={copy.close}>
           <X size={19} />
-        </button>
-      </div>
+        </Button>
+      </CardHeader>
 
-      <div className="panel-rule" />
+      <Separator className="panel-rule" />
 
+      <CardContent className="panel-body">
       {folderId === "work" && (
         <div className="project-list">
           {projects.map((project, index) => {
@@ -157,7 +167,8 @@ function WorkPanel({
                 ? "Penjagaan kesihatan · Reka bentuk produk"
                 : "Logistik · Reka bentuk produk";
             return (
-              <button
+              <Button
+                variant="outline"
                 className={`project-row ${selectedProjectId === project.id ? "is-selected" : ""}`}
                 key={project.id}
                 onClick={() => setSelectedProjectId((current) => current === project.id ? null : project.id)}
@@ -177,7 +188,7 @@ function WorkPanel({
                     <span className="detail-note">{language === "en" ? "Case study details can be added here." : "Butiran kajian kes boleh ditambah di sini."}</span>
                   </span>
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -186,11 +197,11 @@ function WorkPanel({
       {folderId === "side-quests" && (
         <div className="simple-list">
           {sideQuests.map((item) => (
-            <article className="simple-row" key={item.title}>
+            <Card className="simple-row" role="article" key={item.title}>
               <span className="simple-row-icon">{item.icon}</span>
               <div><span className="project-index">{language === "en" ? item.category : "Eksperimen reka bentuk"}</span><h4>{language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}</h4><p>{language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}</p></div>
               <ArrowRight size={18} />
-            </article>
+            </Card>
           ))}
         </div>
       )}
@@ -198,17 +209,18 @@ function WorkPanel({
       {folderId === "about" && (
         <div className="simple-list">
           {aboutNotes.map((item) => (
-            <article className="simple-row" key={item.title}>
+            <Card className="simple-row" role="article" key={item.title}>
               <span className="simple-row-icon note-icon">{item.icon}</span>
               <div><span className="project-index">{language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}</span><h4>{language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}</h4><p>{language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}</p></div>
               <ArrowRight size={18} />
-            </article>
+            </Card>
           ))}
         </div>
       )}
 
       {selectedProject && <span className="sr-only">{selectedProject.title} selected</span>}
-    </aside>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -265,11 +277,6 @@ export function SiteExperience() {
     screenRefs.current[screen]?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function toggleTheme() {
-    const nextTheme = theme === "light" ? "dark" : "light";
-    setTheme(nextTheme);
-  }
-
   function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!CONTACT_EMAIL) {
@@ -291,27 +298,29 @@ export function SiteExperience() {
       <header className="browser-chrome" aria-label="Portfolio browser bar">
         <div className="browser-left">
           <div className="traffic-lights" aria-hidden="true"><i /><i /><i /></div>
-          <span className="browser-divider" />
+          <Separator orientation="vertical" className="browser-divider" />
           <span className="browser-location"><MapPin size={16} strokeWidth={2.2} /><span>{copy.location}</span></span>
         </div>
         <div className="browser-controls">
-          <button
+          <Button
+            variant="ghost"
             className="language-switch"
             onClick={() => setLanguage((current) => current === "en" ? "bm" : "en")}
             aria-label={language === "en" ? "Switch language to Bahasa Melayu" : "Switch language to English"}
             title={language === "en" ? "Bahasa Melayu" : "English"}
           >
             {language === "en" ? "EN" : "BM"}<ChevronDown size={13} />
-          </button>
-          <span className="browser-divider control-divider" />
-          <button className="theme-button" onClick={toggleTheme} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`}>
-            {theme === "light" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button className={`theme-toggle ${theme === "dark" ? "is-dark" : ""}`} onClick={toggleTheme} aria-label="Toggle light and dark theme" aria-pressed={theme === "dark"}>
-            <span />
-          </button>
-          <button className="theme-button moon-button" onClick={toggleTheme} aria-label="Toggle theme"><Moon size={17} /></button>
-          <span className="browser-divider control-divider last-divider" />
+          </Button>
+          <Separator orientation="vertical" className="browser-divider control-divider" />
+          <span className="theme-icon" aria-hidden="true"><Sun size={18} /></span>
+          <Switch
+            className="theme-toggle"
+            checked={theme === "dark"}
+            onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+            aria-label={language === "en" ? "Dark theme" : "Tema gelap"}
+          />
+          <span className="theme-icon moon-icon" aria-hidden="true"><Moon size={17} /></span>
+          <Separator orientation="vertical" className="browser-divider control-divider last-divider" />
           <span className="browser-menu-dots" aria-hidden="true">•••</span>
         </div>
       </header>
@@ -322,22 +331,21 @@ export function SiteExperience() {
         aria-labelledby="intro-title"
         ref={(element) => { screenRefs.current.intro = element; }}
       >
-        <div className="id-card">
-          <div className="lanyard-anchor" aria-hidden="true"><span /></div>
+        <Card className="id-card">
           <div className="portrait-stage">
-            <div className="portrait-placeholder" role="img" aria-label={copy.photoSlot}>
-            </div>
+            <div className="portrait-placeholder" role="img" aria-label={copy.photoSlot} />
           </div>
-          <div className="card-content">
-            <div className="availability-badge"><span className="availability-dot" />{copy.current}</div>
+          <CardContent className="card-content">
+            <Badge variant="outline" className="availability-badge"><span className="availability-dot" />{copy.current}</Badge>
             <h1 id="intro-title">{profile.name}</h1>
             <p className="profile-role">{displayRole}</p>
             <div className="card-work-summary">
+              <Separator />
               <p>{language === "en" ? profile.current : "Kini menerajui reka bentuk produk di TUG."}</p>
               <p>{language === "en" ? profile.past : "Sebelum ini di ThoughtFull dan DKS."}</p>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </section>
 
       <section
@@ -362,7 +370,8 @@ export function SiteExperience() {
                   };
               const isSelected = activeFolder === folder.id && panelOpen;
               return (
-                <button
+                <Button
+                  variant="ghost"
                   className={`folder-card ${folder.color} ${isSelected ? "is-selected" : ""}`}
                   key={folder.id}
                   id={`folder-tab-${folder.id}`}
@@ -380,7 +389,7 @@ export function SiteExperience() {
                   <strong>{localizedFolder.name}</strong>
                   <span className="folder-description">{localizedFolder.description}</span>
                   <span className="folder-number">0{index + 1}</span>
-                </button>
+                </Button>
               );
             })}
           </div>
@@ -417,38 +426,48 @@ export function SiteExperience() {
             <h2 id="contact-title">{copy.contactTitle}</h2>
             <p className="contact-description">{copy.contactBody}</p>
             <form className="contact-form" onSubmit={submitContact}>
-              <label>{copy.name}<input name="name" type="text" autoComplete="name" required placeholder="Alex Morgan" /></label>
-              <label>{copy.email}<input name="email" type="email" autoComplete="email" required placeholder="alex@example.com" /></label>
-              <label>{copy.message}<textarea name="message" required rows={3} placeholder="Tell me a little about it…" /></label>
-              <button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></button>
-              {formMessage && <p className="form-status" role="status">{formMessage}</p>}
-              <p className="form-setup-note">{language === "en" ? "Contact delivery will be wired to your preferred email address." : "Mesej akan dihantar ke alamat e-mel pilihan anda."}</p>
+              <Field className="contact-field">
+                <FieldLabel htmlFor="contact-name">{copy.name}</FieldLabel>
+                <Input id="contact-name" name="name" type="text" autoComplete="name" required placeholder="Alex Morgan" />
+              </Field>
+              <Field className="contact-field">
+                <FieldLabel htmlFor="contact-email">{copy.email}</FieldLabel>
+                <Input id="contact-email" name="email" type="email" autoComplete="email" required placeholder="alex@example.com" />
+              </Field>
+              <Field className="contact-field contact-message-field">
+                <FieldLabel htmlFor="contact-message">{copy.message}</FieldLabel>
+                <Textarea id="contact-message" name="message" required rows={3} placeholder="Tell me a little about it…" />
+              </Field>
+              <Button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></Button>
+              {formMessage && <Alert variant={CONTACT_EMAIL ? "default" : "destructive"} className="form-status"><AlertDescription>{formMessage}</AlertDescription></Alert>}
+              <FieldDescription className="form-setup-note">{language === "en" ? "Contact delivery will be wired to your preferred email address." : "Mesej akan dihantar ke alamat e-mel pilihan anda."}</FieldDescription>
             </form>
           </div>
           <div className="contact-artwork" role="img" aria-label={copy.contactArt}>
-            <div className="contact-image-slot">
+            <Card className="contact-image-slot">
               <span className="contact-image-stamp">IMAGE / 04</span>
               <span className="contact-image-shape shape-a" />
               <span className="contact-image-shape shape-b" />
               <span className="contact-image-shape shape-c" />
-              <div className="contact-art-caption"><span className="availability-dot" />{copy.contactArt}</div>
-            </div>
-            <div className="contact-art-note"><span>LET’S MAKE SOMETHING USEFUL</span><ArrowRight size={17} /></div>
+              <Badge variant="outline" className="contact-art-caption"><span className="availability-dot" />{copy.contactArt}</Badge>
+            </Card>
+            <Card className="contact-art-note"><span>LET’S MAKE SOMETHING USEFUL</span><ArrowRight size={17} /></Card>
           </div>
         </div>
       </section>
 
       <nav className="screen-switcher" aria-label="Portfolio screens">
         {screens.map((screen, index) => (
-          <button
+          <Button
+            variant="ghost"
             className={`screen-switch ${activeScreen === screen ? "is-active" : ""}`}
             key={screen}
             onClick={() => setScreen(screen)}
-            aria-current={activeScreen === screen ? "page" : undefined}
+            aria-current={activeScreen === screen ? "location" : undefined}
           >
             <span className="switch-number">0{index + 1}</span>
             <span>{screenCopy[language][screen]}</span>
-          </button>
+          </Button>
         ))}
       </nav>
     </main>

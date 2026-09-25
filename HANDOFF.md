@@ -2,7 +2,8 @@
 
 ## State
 - Private portfolio Site registered; one-page browser shell and all four screens implemented.
-- Light/dark and English/Bahasa Melayu controls work; the KLCC builder is a small interactive Three.js scene.
+- Screen controls and surfaces use the local shadcn/ui components and mapped light/dark theme tokens. The intro uses a plain Card instead of a lanyard.
+- Light/dark and English/Bahasa Melayu controls are implemented; the KLCC builder is a small interactive Three.js scene.
 - Portrait/contact artwork are placeholders. Contact email delivery still needs the owner's recipient address.
 
 ## Next
