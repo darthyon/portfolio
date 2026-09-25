@@ -2,7 +2,7 @@
 
 ## Product
 
-A personal portfolio presented as a mock browser. The one-page flow is an ID-card intro, a folder-based selected-work browser, an optional Petronas Twin Towers builder, and a contact form.
+A personal portfolio presented as a mock browser. The one-page flow is an ID-card intro, a folder-based selected-work browser, an optional Petronas Twin Towers builder, and a contact form. Show one screen at a time in a locked viewport; wheel, swipe, keyboard, and the screen switcher change the active screen.
 
 ## Stack and boundaries
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -36,6 +36,8 @@ import { TowerBuilder } from "./tower-builder";
 
 type ScreenId = "intro" | "explore" | "play" | "contact";
 type Language = "en" | "bm";
+const screens: readonly ScreenId[] = ["intro", "explore", "play", "contact"];
+const screenIndex = (screen: ScreenId) => screens.indexOf(screen);
 const CONTACT_EMAIL = "";
 
 const screenCopy: Record<Language, Record<ScreenId, string>> = {
@@ -253,13 +255,7 @@ export function SiteExperience() {
   const [panelOpen, setPanelOpen] = useState(true);
   const [builderStarted, setBuilderStarted] = useState(false);
   const [formMessage, setFormMessage] = useState("");
-  const screens = useMemo(() => ["intro", "explore", "play", "contact"] as const, []);
-  const screenRefs = useRef<Record<ScreenId, HTMLElement | null>>({
-    intro: null,
-    explore: null,
-    play: null,
-    contact: null,
-  });
+  const lastWheelNavigation = useRef(0);
   const copy = sectionCopy[language];
   const displayRole = language === "en" ? profile.role : "Pereka produk / pembina";
 
@@ -271,32 +267,76 @@ export function SiteExperience() {
     document.documentElement.lang = language === "en" ? "en" : "ms";
   }, [language]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
-        const id = visible?.target.id as ScreenId | undefined;
-        if (id) {
-          setActiveScreen(id);
-          if (id === "play") setBuilderStarted(true);
-        }
-      },
-      { rootMargin: "-34% 0px -42% 0px", threshold: [0, 0.2, 0.5, 0.8] },
-    );
-
-    screens.forEach((screen) => {
-      const element = screenRefs.current[screen];
-      if (element) observer.observe(element);
-    });
-    return () => observer.disconnect();
-  }, [screens]);
-
   function setScreen(screen: ScreenId) {
     if (screen === "play") setBuilderStarted(true);
-    screenRefs.current[screen]?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveScreen(screen);
   }
+
+  useEffect(() => {
+    let touchStartY: number | null = null;
+    let touchTarget: EventTarget | null = null;
+
+    function moveScreen(direction: -1 | 1) {
+      const next = screens[screenIndex(activeScreen) + direction];
+      if (!next) return;
+      setScreen(next);
+    }
+
+    function handleWheel(event: WheelEvent) {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
+      event.preventDefault();
+      if (Math.abs(event.deltaY) < 24 || Date.now() - lastWheelNavigation.current < 760) return;
+      lastWheelNavigation.current = Date.now();
+      moveScreen(event.deltaY > 0 ? 1 : -1);
+    }
+
+    function handleTouchStart(event: TouchEvent) {
+      touchStartY = event.touches[0]?.clientY ?? null;
+      touchTarget = event.target;
+    }
+
+    function handleTouchEnd(event: TouchEvent) {
+      if (touchStartY === null) return;
+      const target = touchTarget instanceof HTMLElement ? touchTarget : null;
+      if (target?.closest("input, textarea, select, .builder-canvas, [contenteditable='true']")) {
+        touchStartY = null;
+        touchTarget = null;
+        return;
+      }
+
+      const delta = touchStartY - (event.changedTouches[0]?.clientY ?? touchStartY);
+      if (Math.abs(delta) > 48) {
+        event.preventDefault();
+        moveScreen(delta > 0 ? 1 : -1);
+      }
+      touchStartY = null;
+      touchTarget = null;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.closest("input, textarea, select, button, a, [contenteditable='true']")) return;
+      if (event.key === "PageDown" || event.key === "ArrowDown" || event.key === " ") {
+        event.preventDefault();
+        moveScreen(1);
+      } else if (event.key === "PageUp" || event.key === "ArrowUp") {
+        event.preventDefault();
+        moveScreen(-1);
+      }
+    }
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: false });
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeScreen]);
 
   function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -347,7 +387,9 @@ export function SiteExperience() {
         className="screen intro-screen"
         id="intro"
         aria-labelledby="intro-title"
-        ref={(element) => { screenRefs.current.intro = element; }}
+        data-active={activeScreen === "intro"}
+        aria-hidden={activeScreen !== "intro"}
+        inert={activeScreen !== "intro"}
       >
         <PortfolioCard className="id-card">
           <div className="portrait-stage">
@@ -377,7 +419,9 @@ export function SiteExperience() {
         className="screen explore-screen"
         id="explore"
         aria-labelledby="explore-title"
-        ref={(element) => { screenRefs.current.explore = element; }}
+        data-active={activeScreen === "explore"}
+        aria-hidden={activeScreen !== "explore"}
+        inert={activeScreen !== "explore"}
       >
         <div className="section-heading explore-heading">
           <span className="section-eyebrow"><span className="eyebrow-icon">✳</span>{copy.exploreEyebrow}</span>
@@ -423,7 +467,9 @@ export function SiteExperience() {
         className="screen play-screen"
         id="play"
         aria-labelledby="play-title"
-        ref={(element) => { screenRefs.current.play = element; }}
+        data-active={activeScreen === "play"}
+        aria-hidden={activeScreen !== "play"}
+        inert={activeScreen !== "play"}
       >
         <div className="section-heading play-heading">
           <span className="section-eyebrow"><span className="eyebrow-icon">✦</span>{copy.playEyebrow} <span aria-hidden="true">🎮</span></span>
@@ -437,7 +483,9 @@ export function SiteExperience() {
         className="screen contact-screen"
         id="contact"
         aria-labelledby="contact-title"
-        ref={(element) => { screenRefs.current.contact = element; }}
+        data-active={activeScreen === "contact"}
+        aria-hidden={activeScreen !== "contact"}
+        inert={activeScreen !== "contact"}
       >
         <div className="contact-layout">
           <div className="contact-copy">

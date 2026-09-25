@@ -1,6 +1,6 @@
 # Youn Yusuff portfolio
 
-A one-page portfolio presented inside a browser-style frame. It has an ID-card introduction, folder-based project browser, a small Three.js Petronas Twin Towers builder, and a contact form.
+A one-page portfolio presented inside a browser-style frame. It has an ID-card introduction, folder-based project browser, a small Three.js Petronas Twin Towers builder, and a contact form. It stays within the viewport and changes one screen at a time through the bottom navigation, mouse wheel, touch swipes, and page up/down keys.
 
 ## Component system
 
@@ -9,6 +9,7 @@ A one-page portfolio presented inside a browser-style frame. It has an ID-card i
 - Use `PortfolioInfoCard` from `components/portfolio-info-card.tsx` for the static Side Quests and About entries. Pass the localized category, title, and summary as props.
 - Put layout and artwork rules in `app/globals.css`. Keep card elevation in the shared tokens there instead of adding a separate border or shadow to each screen.
 - Project rows are shadcn Buttons so each row remains one keyboard-accessible action; they use the same subtle shadow token as nested cards.
+- The full-screen switcher is a set of discrete shadcn Buttons with one active state, inspired by [useLayouts Discrete Tabs](https://uselayouts.com/docs/components/discrete-tabs). It does not need the source component's extra motion or icon dependencies.
 
 ```tsx
 import { PortfolioCard } from "@/components/portfolio-card";
