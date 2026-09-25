@@ -4,6 +4,7 @@
 - Private portfolio Site registered; one-page browser shell and all four screens implemented.
 - Screen controls use local shadcn/ui components. Card surfaces share `PortfolioCard` with raised/subtle borderless elevation and mapped light/dark tokens; the intro has no lanyard.
 - The browser shell now holds one active screen in a viewport-sized grid. Screen navigation uses the discrete tab inspiration documented in README.md; manual visual review is pending.
+- Explore folders now fan out colored card sheets on hover, focus, or selection; the borderless project list follows the collection-card pattern documented in README.md.
 - Light/dark and English/Bahasa Melayu controls are implemented; the KLCC builder is a small interactive Three.js scene.
 - Portrait/contact artwork are placeholders. Contact email delivery still needs the owner's recipient address.
 

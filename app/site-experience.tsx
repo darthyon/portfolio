@@ -31,6 +31,7 @@ import {
   sideQuests,
   type FolderContent,
   type FolderId,
+  type PortfolioProject,
 } from "./portfolio-data";
 import { TowerBuilder } from "./tower-builder";
 
@@ -106,26 +107,26 @@ const sectionCopy = {
 
 function ProjectPreview({ project }: { project: (typeof projects)[number] }) {
   return (
-    <div className={`project-preview ${project.color}`} aria-hidden="true">
-      <div className="phone-frame">
-        <div className="phone-speaker" />
-        <div className="phone-screen">
-          <div className="phone-heading">
+    <span className={`project-preview ${project.color}`} aria-hidden="true">
+      <span className="phone-frame">
+        <span className="phone-speaker" />
+        <span className="phone-screen">
+          <span className="phone-heading">
             <span className="phone-app-mark" />
             <strong>{project.previewLabel}</strong>
-          </div>
+          </span>
           {project.previewItems.map((item, index) => (
-            <div className="phone-list-item" key={item}>
+            <span className="phone-list-item" key={item}>
               <span className={`phone-item-icon item-${index + 1}`} />
               <span>{item}</span>
               <ArrowRight size={10} strokeWidth={2.5} />
-            </div>
+            </span>
           ))}
-        </div>
-      </div>
+        </span>
+      </span>
       <span className="preview-orbit orbit-one" />
       <span className="preview-orbit orbit-two" />
-    </div>
+    </span>
   );
 }
 
@@ -135,6 +136,67 @@ function EmployerMark({ name, monogram }: { name: string; monogram: string }) {
       <span className="employer-mark" aria-hidden="true">{monogram}</span>
       <span>{name}</span>
     </span>
+  );
+}
+
+function FolderVisual({ isOpen }: { isOpen: boolean }) {
+  return (
+    <span className="folder-art" aria-hidden="true">
+      <span className="folder-sheet folder-sheet-left" />
+      <span className="folder-sheet folder-sheet-center" />
+      <span className="folder-sheet folder-sheet-right" />
+      {isOpen ? <FolderOpen size={78} strokeWidth={1.3} /> : <Folder size={78} strokeWidth={1.3} />}
+      <span className="folder-art-cursor">↖</span>
+    </span>
+  );
+}
+
+function ProjectRowCard({
+  project,
+  index,
+  language,
+  isSelected,
+  onSelect,
+}: {
+  project: PortfolioProject;
+  index: number;
+  language: Language;
+  isSelected: boolean;
+  onSelect: () => void;
+}) {
+  const summary = language === "en" ? project.summary : project.id === "mysubsidi"
+    ? "Penjejak subsidi kerajaan untuk rakyat Malaysia."
+    : project.id === "welluber"
+      ? "Pengangkutan penjagaan kesihatan atas permintaan."
+      : "Platform logistik yang menghubungkan perniagaan dan pemandu lori.";
+  const category = language === "en" ? project.category : project.id === "mysubsidi"
+    ? "Perkhidmatan awam · Reka bentuk produk"
+    : project.id === "welluber"
+      ? "Penjagaan kesihatan · Reka bentuk produk"
+      : "Logistik · Reka bentuk produk";
+
+  return (
+    <Button
+      variant="ghost"
+      className={`project-row ${project.color} ${isSelected ? "is-selected" : ""}`}
+      onClick={onSelect}
+      aria-expanded={isSelected}
+    >
+      <ProjectPreview project={project} />
+      <span className="project-row-copy">
+        <span className="project-index">0{index + 1} / {category}</span>
+        <strong>{project.title}</strong>
+        <span className="project-summary">{summary}</span>
+      </span>
+      <span className="project-arrow"><ArrowRight size={18} /></span>
+      {isSelected && (
+        <span className="project-detail">
+          <span className="detail-kicker">{language === "en" ? "Selected project" : "Projek terpilih"}</span>
+          <span>{summary}</span>
+          <span className="detail-note">{language === "en" ? "Case study details can be added here." : "Butiran kajian kes boleh ditambah di sini."}</span>
+        </span>
+      )}
+    </Button>
   );
 }
 
@@ -154,7 +216,7 @@ function WorkPanel({
   const copy = sectionCopy[language];
 
   return (
-    <PortfolioCard className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
+    <PortfolioCard data-folder={folderId} className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
       <CardHeader className="panel-heading">
         <div className="panel-title-wrap">
           <FolderOpen className="panel-folder-icon" size={30} strokeWidth={1.8} />
@@ -168,47 +230,19 @@ function WorkPanel({
         </Button>
       </CardHeader>
 
-      <Separator className="panel-rule" />
-
       <CardContent className="panel-body">
       {folderId === "work" && (
         <div className="project-list">
-          {projects.map((project, index) => {
-            const summary = language === "en" ? project.summary : project.id === "mysubsidi"
-              ? "Penjejak subsidi kerajaan untuk rakyat Malaysia."
-              : project.id === "welluber"
-                ? "Pengangkutan penjagaan kesihatan atas permintaan."
-                : "Platform logistik yang menghubungkan perniagaan dan pemandu lori.";
-            const category = language === "en" ? project.category : project.id === "mysubsidi"
-              ? "Perkhidmatan awam · Reka bentuk produk"
-              : project.id === "welluber"
-                ? "Penjagaan kesihatan · Reka bentuk produk"
-                : "Logistik · Reka bentuk produk";
-            return (
-              <Button
-                variant="outline"
-                className={`project-row ${selectedProjectId === project.id ? "is-selected" : ""}`}
-                key={project.id}
-                onClick={() => setSelectedProjectId((current) => current === project.id ? null : project.id)}
-                aria-expanded={selectedProjectId === project.id}
-              >
-                <ProjectPreview project={project} />
-                <span className="project-row-copy">
-                  <span className="project-index">0{index + 1} / {category}</span>
-                  <strong>{project.title}</strong>
-                  <span className="project-summary">{summary}</span>
-                </span>
-                <span className="project-arrow"><ArrowRight size={18} /></span>
-                {selectedProjectId === project.id && (
-                  <span className="project-detail">
-                    <span className="detail-kicker">{language === "en" ? "Selected project" : "Projek terpilih"}</span>
-                    <span>{summary}</span>
-                    <span className="detail-note">{language === "en" ? "Case study details can be added here." : "Butiran kajian kes boleh ditambah di sini."}</span>
-                  </span>
-                )}
-              </Button>
-            );
-          })}
+          {projects.map((project, index) => (
+            <ProjectRowCard
+              key={project.id}
+              project={project}
+              index={index}
+              language={language}
+              isSelected={selectedProjectId === project.id}
+              onSelect={() => setSelectedProjectId((current) => current === project.id ? null : project.id)}
+            />
+          ))}
         </div>
       )}
 
@@ -445,10 +479,7 @@ export function SiteExperience() {
                   aria-expanded={isSelected}
                   aria-controls="folder-panel"
                 >
-                  <span className="folder-art" aria-hidden="true">
-                    {isSelected ? <FolderOpen size={78} strokeWidth={1.3} /> : <Folder size={78} strokeWidth={1.3} />}
-                    <span className="folder-art-cursor">↖</span>
-                  </span>
+                  <FolderVisual isOpen={isSelected} />
                   <strong>{localizedFolder.name}</strong>
                   <span className="folder-description">{localizedFolder.description}</span>
                   <span className="folder-number">0{index + 1}</span>
