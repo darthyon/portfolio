@@ -7,6 +7,7 @@ import {
   ChevronDown,
   Folder,
   FolderOpen,
+  Mail,
   MapPin,
   Moon,
   Sun,
@@ -66,7 +67,6 @@ const sectionCopy = {
     playEyebrow: "Play a little",
     playTitle: "Build the towers.",
     playBody: "A small building challenge for bigger ideas.",
-    contactEyebrow: "Get in touch",
     contactTitle: "Let’s talk.",
     contactBody:
       "I’m open to thoughtful conversations about product work, collaboration, and new ideas.",
@@ -76,9 +76,9 @@ const sectionCopy = {
     send: "Send a message",
     emailNeeded: "Add your preferred contact email to activate this form.",
     emailReady: "Your email app should open with this draft.",
+    contactSetup: "Email delivery isn’t connected yet.",
     location: profile.location,
     photoSlot: "Your 3D portrait goes here",
-    contactArt: "Your contact image goes here",
   },
   bm: {
     current: "Beli Smiski baharu",
@@ -89,7 +89,6 @@ const sectionCopy = {
     playEyebrow: "Jom bermain",
     playTitle: "Bina menara.",
     playBody: "Cabaran membina kecil untuk idea besar.",
-    contactEyebrow: "Hubungi saya",
     contactTitle: "Mari berbual.",
     contactBody:
       "Saya terbuka untuk berbual tentang kerja produk, kerjasama dan idea baharu.",
@@ -99,9 +98,9 @@ const sectionCopy = {
     send: "Hantar mesej",
     emailNeeded: "Tambah alamat e-mel anda untuk mengaktifkan borang ini.",
     emailReady: "Aplikasi e-mel anda sepatutnya dibuka dengan draf ini.",
+    contactSetup: "Penghantaran e-mel belum disambungkan.",
     location: profile.location,
     photoSlot: "Potret 3D anda akan diletakkan di sini",
-    contactArt: "Imej hubungan anda akan diletakkan di sini",
   },
 } as const;
 
@@ -520,37 +519,38 @@ export function SiteExperience() {
       >
         <div className="contact-layout">
           <div className="contact-copy">
-            <span className="section-eyebrow"><span className="eyebrow-icon">↗</span>{copy.contactEyebrow} <span aria-hidden="true">👋</span></span>
             <h2 id="contact-title">{copy.contactTitle}</h2>
             <p className="contact-description">{copy.contactBody}</p>
-            <form className="contact-form" onSubmit={submitContact}>
-              <Field className="contact-field">
-                <FieldLabel htmlFor="contact-name">{copy.name}</FieldLabel>
-                <Input id="contact-name" name="name" type="text" autoComplete="name" required placeholder="Alex Morgan" />
-              </Field>
-              <Field className="contact-field">
-                <FieldLabel htmlFor="contact-email">{copy.email}</FieldLabel>
-                <Input id="contact-email" name="email" type="email" autoComplete="email" required placeholder="alex@example.com" />
-              </Field>
-              <Field className="contact-field contact-message-field">
-                <FieldLabel htmlFor="contact-message">{copy.message}</FieldLabel>
-                <Textarea id="contact-message" name="message" required rows={3} placeholder="Tell me a little about it…" />
-              </Field>
-              <Button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></Button>
-              {formMessage && <Alert variant={CONTACT_EMAIL ? "default" : "destructive"} className="form-status"><AlertDescription>{formMessage}</AlertDescription></Alert>}
-              <FieldDescription className="form-setup-note">{language === "en" ? "Contact delivery will be wired to your preferred email address." : "Mesej akan dihantar ke alamat e-mel pilihan anda."}</FieldDescription>
-            </form>
           </div>
-          <div className="contact-artwork" role="img" aria-label={copy.contactArt}>
-            <PortfolioCard className="contact-image-slot">
-              <span className="contact-image-stamp">IMAGE / 04</span>
-              <span className="contact-image-shape shape-a" />
-              <span className="contact-image-shape shape-b" />
-              <span className="contact-image-shape shape-c" />
-              <Badge variant="outline" className="contact-art-caption"><span className="availability-dot" />{copy.contactArt}</Badge>
-            </PortfolioCard>
-            <PortfolioCard elevation="subtle" className="contact-art-note"><span>LET’S MAKE SOMETHING USEFUL</span><ArrowRight size={17} /></PortfolioCard>
-          </div>
+          <PortfolioCard className="contact-composer" elevation="subtle" aria-labelledby="contact-composer-title">
+            <CardHeader className="contact-composer-header">
+              <span className="contact-composer-icon" aria-hidden="true"><Mail size={19} /></span>
+              <div className="contact-recipient">
+                <CardDescription>{language === "en" ? "Message to" : "Mesej kepada"}</CardDescription>
+                <CardTitle id="contact-composer-title">Youn Yusuff</CardTitle>
+              </div>
+              <span className="contact-composer-mark" aria-hidden="true">NOTE / 01</span>
+            </CardHeader>
+            <CardContent className="contact-composer-content">
+              <form className="contact-form" onSubmit={submitContact}>
+                <Field className="contact-field">
+                  <FieldLabel htmlFor="contact-name">{copy.name}</FieldLabel>
+                  <Input id="contact-name" name="name" type="text" autoComplete="name" required placeholder="Alex Morgan" />
+                </Field>
+                <Field className="contact-field">
+                  <FieldLabel htmlFor="contact-email">{copy.email}</FieldLabel>
+                  <Input id="contact-email" name="email" type="email" autoComplete="email" required placeholder="alex@example.com" />
+                </Field>
+                <Field className="contact-field contact-message-field">
+                  <FieldLabel htmlFor="contact-message">{copy.message}</FieldLabel>
+                  <Textarea id="contact-message" name="message" required rows={3} placeholder="Tell me a little about it…" />
+                </Field>
+                <Button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></Button>
+                {formMessage && <Alert variant={CONTACT_EMAIL ? "default" : "destructive"} className="form-status"><AlertDescription>{formMessage}</AlertDescription></Alert>}
+                <FieldDescription className="form-setup-note">{copy.contactSetup}</FieldDescription>
+              </form>
+            </CardContent>
+          </PortfolioCard>
         </div>
       </section>
 
