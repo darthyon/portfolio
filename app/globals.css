@@ -112,7 +112,7 @@ button { color: inherit; }
   border: 0;
   border-radius: 0;
   background: color-mix(in srgb, var(--surface) 88%, var(--page));
-  box-shadow: 0 1px 0 rgb(42 61 99 / 3%);
+  box-shadow: none;
   backdrop-filter: blur(18px);
 }
 .browser-left, .browser-controls, .browser-location, .language-switch { display: flex; align-items: center; }
