@@ -34,7 +34,7 @@ npm run dev
 ## Update portfolio content
 
 - Edit profile and project content in `app/portfolio-data.ts`.
-- Replace the portrait slot in `app/site-experience.tsx` with the supplied 3D portrait asset.
+- Replace `public/portrait-youn.png` to update the intro portrait.
 - Set the contact recipient before enabling email delivery in `app/site-experience.tsx`.
 
 The contact screen uses a centered note composer and has no backend or stored visitor submissions. Email delivery remains disconnected until a recipient address is supplied.

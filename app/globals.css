@@ -140,10 +140,11 @@ button { color: inherit; }
 .intro-screen { gap: 0; padding-top: 12px; padding-bottom: 12px; }
 .id-card { position: relative; width: min(100%, 494px); gap: 0; padding: 18px; border-radius: 27px; }
 .portrait-stage { position: relative; overflow: hidden; height: clamp(170px, 35dvh, 340px); border-radius: 21px 21px 8px 8px; background: linear-gradient(145deg, #f7faff, #e8eff9 68%, #edf2fa); }
-.portrait-placeholder { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 72%, rgb(255 255 255 / 52%), transparent 48%); }
-.portrait-placeholder::before, .portrait-placeholder::after { position: absolute; bottom: -51%; width: 58%; height: 92%; border-radius: 50% 50% 0 0; background: rgb(215 226 242 / 34%); content: ""; }
-.portrait-placeholder::before { left: -22%; }
-.portrait-placeholder::after { right: -22%; background: rgb(221 232 247 / 40%); }
+.portrait-backdrop { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 72%, rgb(255 255 255 / 52%), transparent 48%); }
+.portrait-backdrop::before, .portrait-backdrop::after { position: absolute; bottom: -51%; width: 58%; height: 92%; border-radius: 50% 50% 0 0; background: rgb(215 226 242 / 34%); content: ""; }
+.portrait-backdrop::before { left: -22%; }
+.portrait-backdrop::after { right: -22%; background: rgb(221 232 247 / 40%); }
+.portrait-image { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 12%; user-select: none; }
 .card-content { position: relative; z-index: 2; padding: 34px 22px 20px; text-align: center; }
 .availability-badge { position: absolute; top: -47px; left: 50%; display: inline-flex; max-width: calc(100% - 12px); min-height: 38px; align-items: center; gap: 10px; padding: 6px 15px; transform: translateX(-50%); border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--ink); font-size: 12px; line-height: 1.25; text-align: left; white-space: normal; box-shadow: var(--shadow-small); }
 .availability-badge .availability-dot { flex: 0 0 auto; }
@@ -364,8 +365,8 @@ button { color: inherit; }
 
 :root[data-theme="dark"] .portrait-stage,
 :root[data-theme="dark"] .reference-visual { background: linear-gradient(145deg, #283851, #202e45 55%, #34445e); }
-:root[data-theme="dark"] .portrait-placeholder::before { background: rgb(57 77 107 / 32%); }
-:root[data-theme="dark"] .portrait-placeholder::after { background: rgb(58 77 107 / 38%); }
+:root[data-theme="dark"] .portrait-backdrop::before { background: rgb(57 77 107 / 32%); }
+:root[data-theme="dark"] .portrait-backdrop::after { background: rgb(58 77 107 / 38%); }
 :root[data-theme="dark"] .canvas-loading { color: #d6deed; }
 :root[data-theme="dark"] .canvas-label,
 :root[data-theme="dark"] .canvas-level-tag,
@@ -546,6 +547,9 @@ button { color: inherit; }
   .send-button { min-height: 37px; }
   .screen-switcher { height: 50px; }
   .screen-switch { min-height: 40px; }
+}
+@media (max-width: 760px) and (max-height: 680px) {
+  .portrait-stage { height: clamp(230px, 38dvh, 255px); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }

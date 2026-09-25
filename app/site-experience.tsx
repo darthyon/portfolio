@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -78,7 +79,7 @@ const sectionCopy = {
     emailReady: "Your email app should open with this draft.",
     contactSetup: "Email delivery isn’t connected yet.",
     location: profile.location,
-    photoSlot: "Your 3D portrait goes here",
+    portraitAlt: "3D portrait of Youn Yusuff",
   },
   bm: {
     current: "Beli Smiski baharu",
@@ -100,7 +101,7 @@ const sectionCopy = {
     emailReady: "Aplikasi e-mel anda sepatutnya dibuka dengan draf ini.",
     contactSetup: "Penghantaran e-mel belum disambungkan.",
     location: profile.location,
-    photoSlot: "Potret 3D anda akan diletakkan di sini",
+    portraitAlt: "Potret 3D Youn Yusuff",
   },
 } as const;
 
@@ -426,7 +427,18 @@ export function SiteExperience() {
       >
         <PortfolioCard className="id-card">
           <div className="portrait-stage">
-            <div className="portrait-placeholder" role="img" aria-label={copy.photoSlot} />
+            <div className="portrait-backdrop" aria-hidden="true" />
+            <Image
+              className="portrait-image"
+              src="/portrait-youn.png"
+              alt={copy.portraitAlt}
+              width={1254}
+              height={1254}
+              fetchPriority="high"
+              preload
+              unoptimized
+              draggable={false}
+            />
           </div>
           <CardContent className="card-content">
             <Badge variant="outline" className="availability-badge"><span className="availability-dot" />{copy.current}</Badge>

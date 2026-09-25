@@ -6,11 +6,11 @@
 - The browser shell now holds one active screen in a viewport-sized grid. Screen navigation uses the discrete tab inspiration documented in README.md; manual visual review is pending.
 - Explore folders now fan out colored card sheets on hover, focus, or selection; the borderless project list follows the collection-card pattern documented in README.md.
 - Light/dark and English/Bahasa Melayu controls are implemented; the KLCC builder is a small interactive Three.js scene.
-- The portrait remains a placeholder. Contact is a centered note composer; email delivery still needs the owner's recipient address.
+- The intro now uses the supplied transparent 3D portrait at `public/portrait-youn.png`. Contact is a centered note composer; email delivery still needs the owner's recipient address.
 
 ## Next
 - Review screen fit and wheel/swipe navigation with the owner at desktop, mobile, and short viewport sizes; no in-chat preview was run.
-- Add the supplied portrait, then replace or confirm profile and project copy.
+- Replace other portfolio images as the owner supplies them, then confirm profile and project copy.
 - Wire the contact recipient and enable mailto submission.
 
 ## Blockers-decisions
