@@ -102,7 +102,7 @@ export const profile = {
   name: "Youn Yusuff",
   role: "Product designer / builder",
   current: "Currently leading product design at TUG.",
-  past: "Previously at ThoughtFull and DKS.",
+  past: "Previously at ThoughtFull and DKSH.",
   introduction:
     "I bring product thinking and hands-on making together to turn complex problems into clear, useful experiences.",
   location: "Kuala Lumpur, Malaysia",

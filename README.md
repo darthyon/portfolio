@@ -35,6 +35,7 @@ npm run dev
 
 - Edit profile and project content in `app/portfolio-data.ts`.
 - Replace `public/portrait-youn.png` to update the intro portrait.
+- Replace the matching files in `public/logos/` to update the employer marks.
 - Set the contact recipient before enabling email delivery in `app/site-experience.tsx`.
 
 The contact screen uses a centered note composer and has no backend or stored visitor submissions. Email delivery remains disconnected until a recipient address is supplied.

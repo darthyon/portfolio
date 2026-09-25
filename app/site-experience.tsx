@@ -130,10 +130,12 @@ function ProjectPreview({ project }: { project: (typeof projects)[number] }) {
   );
 }
 
-function EmployerMark({ name, monogram }: { name: string; monogram: string }) {
+function EmployerMark({ name, logoSrc }: { name: string; logoSrc: string }) {
   return (
     <span className="employer-mention">
-      <span className="employer-mark" aria-hidden="true">{monogram}</span>
+      <span className="employer-mark" aria-hidden="true">
+        <Image src={logoSrc} alt="" width={28} height={28} unoptimized draggable={false} />
+      </span>
       <span>{name}</span>
     </span>
   );
@@ -448,12 +450,12 @@ export function SiteExperience() {
               <Separator />
               <p>
                 {language === "en" ? "Currently leading product design at" : "Kini menerajui reka bentuk produk di"}{" "}
-                <EmployerMark name="TUG" monogram="T" />.
+                <EmployerMark name="TUG" logoSrc="/logos/tug.png" />.
               </p>
               <p>
                 {language === "en" ? "Previously at" : "Sebelum ini di"}{" "}
-                <EmployerMark name="ThoughtFull" monogram="TF" /> {language === "en" ? "and" : "dan"}{" "}
-                <EmployerMark name="DKS" monogram="DKS" />.
+                <EmployerMark name="ThoughtFull" logoSrc="/logos/thoughtfull.png" /> {language === "en" ? "and" : "dan"}{" "}
+                <EmployerMark name="DKSH" logoSrc="/logos/dksh.jpg" />.
               </p>
             </div>
           </CardContent>
