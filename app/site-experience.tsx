@@ -55,7 +55,7 @@ function localizeFolder(folder: FolderContent, language: Language): FolderConten
 
 const sectionCopy = {
   en: {
-    current: "Currently at TUG",
+    current: "Current hyperfixation: building an ESP32 Walkman",
     exploreEyebrow: "The work folder",
     exploreTitle: "A few things I’ve designed and built.",
     close: "Close panel",
@@ -78,7 +78,7 @@ const sectionCopy = {
     contactArt: "Your contact image goes here",
   },
   bm: {
-    current: "Kini di TUG",
+    current: "Hyperfokus kini: membina Walkman ESP32",
     exploreEyebrow: "Folder kerja",
     exploreTitle: "Beberapa perkara yang saya reka dan bina.",
     close: "Tutup panel",
@@ -324,16 +324,13 @@ export function SiteExperience() {
             {language === "en" ? "EN" : "BM"}<ChevronDown size={13} />
           </Button>
           <Separator orientation="vertical" className="browser-divider control-divider" />
-          <span className="theme-icon" aria-hidden="true"><Sun size={18} /></span>
+          <span className="theme-icon" aria-hidden="true">{theme === "dark" ? <Moon size={17} /> : <Sun size={18} />}</span>
           <Switch
             className="theme-toggle"
             checked={theme === "dark"}
             onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-            aria-label={language === "en" ? "Dark theme" : "Tema gelap"}
+            aria-label={language === "en" ? (theme === "dark" ? "Switch to light theme" : "Switch to dark theme") : (theme === "dark" ? "Tukar ke tema cerah" : "Tukar ke tema gelap")}
           />
-          <span className="theme-icon moon-icon" aria-hidden="true"><Moon size={17} /></span>
-          <Separator orientation="vertical" className="browser-divider control-divider last-divider" />
-          <span className="browser-menu-dots" aria-hidden="true">•••</span>
         </div>
       </header>
 
