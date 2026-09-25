@@ -57,7 +57,7 @@ function localizeFolder(folder: FolderContent, language: Language): FolderConten
 
 const sectionCopy = {
   en: {
-    current: "Current hyperfixation: building an ESP32 Walkman",
+    current: "Bought a new Smiski",
     exploreEyebrow: "The work folder",
     exploreTitle: "A few things I’ve designed and built.",
     close: "Close panel",
@@ -80,7 +80,7 @@ const sectionCopy = {
     contactArt: "Your contact image goes here",
   },
   bm: {
-    current: "Hyperfokus kini: membina Walkman ESP32",
+    current: "Beli Smiski baharu",
     exploreEyebrow: "Folder kerja",
     exploreTitle: "Beberapa perkara yang saya reka dan bina.",
     close: "Tutup panel",
