@@ -33,12 +33,7 @@ const screenCopy: Record<Language, Record<ScreenId, string>> = {
 
 const sectionCopy = {
   en: {
-    current: "Currently at",
-    past: "Before that",
-    introEyebrow: "A little about me",
-    introTitle: "Designing useful things. Building them, too.",
-    introBody:
-      "I bring product thinking and hands-on making together to turn complex problems into clear, useful experiences.",
+    current: "Currently at TUG",
     exploreEyebrow: "The work folder",
     exploreTitle: "A few things I’ve designed and built.",
     close: "Close panel",
@@ -59,15 +54,9 @@ const sectionCopy = {
     location: profile.location,
     photoSlot: "Your 3D portrait goes here",
     contactArt: "Your contact image goes here",
-    page: "Screen",
   },
   bm: {
-    current: "Kini di",
-    past: "Sebelum ini",
-    introEyebrow: "Sedikit tentang saya",
-    introTitle: "Mereka bentuk perkara berguna. Membinanya juga.",
-    introBody:
-      "Saya gabungkan pemikiran produk dan kemahiran membina untuk menjadikan masalah kompleks lebih jelas dan berguna.",
+    current: "Kini di TUG",
     exploreEyebrow: "Folder kerja",
     exploreTitle: "Beberapa perkara yang saya reka dan bina.",
     close: "Tutup panel",
@@ -88,7 +77,6 @@ const sectionCopy = {
     location: profile.location,
     photoSlot: "Potret 3D anda akan diletakkan di sini",
     contactArt: "Imej hubungan anda akan diletakkan di sini",
-    page: "Skrin",
   },
 } as const;
 
@@ -241,9 +229,6 @@ export function SiteExperience() {
   });
   const copy = sectionCopy[language];
   const displayRole = language === "en" ? profile.role : "Pereka produk / pembina";
-  const careerSummary = language === "en"
-    ? `${profile.current} ${profile.past}`
-    : "Kini menerajui reka bentuk produk di TUG. Sebelum ini di ThoughtFull dan DKS.";
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -331,8 +316,6 @@ export function SiteExperience() {
         </div>
       </header>
 
-      <div className="browser-page-hint"><span className="browser-page-dot" /> {copy.page} {String(screens.indexOf(activeScreen) + 1).padStart(2, "0")} / 04</div>
-
       <section
         className="screen intro-screen"
         id="intro"
@@ -343,26 +326,18 @@ export function SiteExperience() {
           <div className="lanyard-anchor" aria-hidden="true"><span /></div>
           <div className="portrait-stage">
             <div className="portrait-placeholder" role="img" aria-label={copy.photoSlot}>
-              <span className="portrait-orbit portrait-orbit-a" />
-              <span className="portrait-orbit portrait-orbit-b" />
-              <div className="portrait-silhouette"><span className="portrait-head" /><span className="portrait-body" /></div>
-              <span className="portrait-slot-label">3D PORTRAIT</span>
             </div>
           </div>
           <div className="card-content">
-            <div className="availability-badge"><span className="availability-dot" />{copy.current} <strong>TUG</strong></div>
-            <p className="card-eyebrow">{copy.introEyebrow}</p>
+            <div className="availability-badge"><span className="availability-dot" />{copy.current}</div>
             <h1 id="intro-title">{profile.name}</h1>
             <p className="profile-role">{displayRole}</p>
-            <p className="profile-description">{copy.introBody}</p>
-            <div className="profile-history">
-              <span>{copy.past}</span><strong>ThoughtFull <i /> DKS</strong>
+            <div className="card-work-summary">
+              <p>{language === "en" ? profile.current : "Kini menerajui reka bentuk produk di TUG."}</p>
+              <p>{language === "en" ? profile.past : "Sebelum ini di ThoughtFull dan DKS."}</p>
             </div>
-            <p className="card-current-copy">{careerSummary}</p>
           </div>
-          <span className="card-serial">ID · 01</span>
         </div>
-        <p className="screen-caption">{displayRole} <span>·</span> {copy.location}</p>
       </section>
 
       <section
