@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks git --no-banner --redact --log-opts="--all --not --remotes" .
+  exit $?
+fi
+
+printf '%s\n' "gitleaks is unavailable; running a basic check on outgoing source." >&2
+if git log --name-only --pretty=format: --not --remotes | rg -q '(^|/)(\.env($|\.)|id_rsa|id_ed25519|credentials\.json|secrets?\.json)$'; then
+  printf '%s\n' "PUSH BLOCKED: an environment or credential file is in outgoing source." >&2
+  exit 1
+fi
+if git log -p --format= --not --remotes | rg -q '(AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9_-]{20,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|postgres(ql)?://[^[:space:]]+)'; then
+  printf '%s\n' "PUSH BLOCKED: a possible secret was found in outgoing source." >&2
+  exit 1
+fi
+printf '%s\n' "Basic secret patterns scanned; install gitleaks for full history scanning."
