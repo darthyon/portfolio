@@ -24,6 +24,7 @@ import { TowerBuilder } from "./tower-builder";
 
 type ScreenId = "intro" | "explore" | "play" | "contact";
 type Language = "en" | "bm";
+const CONTACT_EMAIL = "";
 
 const screenCopy: Record<Language, Record<ScreenId, string>> = {
   en: { intro: "Intro", explore: "Explore", play: "Play", contact: "Contact" },
@@ -54,6 +55,7 @@ const sectionCopy = {
     message: "What’s on your mind?",
     send: "Send a message",
     emailNeeded: "Add your preferred contact email to activate this form.",
+    emailReady: "Your email app should open with this draft.",
     location: profile.location,
     photoSlot: "Your 3D portrait goes here",
     contactArt: "Your contact image goes here",
@@ -82,6 +84,7 @@ const sectionCopy = {
     message: "Apa yang ingin anda sampaikan?",
     send: "Hantar mesej",
     emailNeeded: "Tambah alamat e-mel anda untuk mengaktifkan borang ini.",
+    emailReady: "Aplikasi e-mel anda sepatutnya dibuka dengan draf ini.",
     location: profile.location,
     photoSlot: "Potret 3D anda akan diletakkan di sini",
     contactArt: "Imej hubungan anda akan diletakkan di sini",
@@ -154,29 +157,41 @@ function WorkPanel({
 
       {folderId === "work" && (
         <div className="project-list">
-          {projects.map((project, index) => (
-            <button
-              className={`project-row ${selectedProjectId === project.id ? "is-selected" : ""}`}
-              key={project.id}
-              onClick={() => setSelectedProjectId((current) => current === project.id ? null : project.id)}
-              aria-expanded={selectedProjectId === project.id}
-            >
-              <ProjectPreview project={project} />
-              <span className="project-row-copy">
-                <span className="project-index">0{index + 1} / {project.category}</span>
-                <strong>{project.title}</strong>
-                <span className="project-summary">{project.summary}</span>
-              </span>
-              <span className="project-arrow"><ArrowRight size={18} /></span>
-              {selectedProjectId === project.id && (
-                <span className="project-detail">
-                  <span className="detail-kicker">Selected project</span>
-                  <span>{project.summary}</span>
-                  <span className="detail-note">Case study details can be added here.</span>
+          {projects.map((project, index) => {
+            const summary = language === "en" ? project.summary : project.id === "mysubsidi"
+              ? "Penjejak subsidi kerajaan untuk rakyat Malaysia."
+              : project.id === "welluber"
+                ? "Pengangkutan penjagaan kesihatan atas permintaan."
+                : "Platform logistik yang menghubungkan perniagaan dan pemandu lori.";
+            const category = language === "en" ? project.category : project.id === "mysubsidi"
+              ? "Perkhidmatan awam · Reka bentuk produk"
+              : project.id === "welluber"
+                ? "Penjagaan kesihatan · Reka bentuk produk"
+                : "Logistik · Reka bentuk produk";
+            return (
+              <button
+                className={`project-row ${selectedProjectId === project.id ? "is-selected" : ""}`}
+                key={project.id}
+                onClick={() => setSelectedProjectId((current) => current === project.id ? null : project.id)}
+                aria-expanded={selectedProjectId === project.id}
+              >
+                <ProjectPreview project={project} />
+                <span className="project-row-copy">
+                  <span className="project-index">0{index + 1} / {category}</span>
+                  <strong>{project.title}</strong>
+                  <span className="project-summary">{summary}</span>
                 </span>
-              )}
-            </button>
-          ))}
+                <span className="project-arrow"><ArrowRight size={18} /></span>
+                {selectedProjectId === project.id && (
+                  <span className="project-detail">
+                    <span className="detail-kicker">{language === "en" ? "Selected project" : "Projek terpilih"}</span>
+                    <span>{summary}</span>
+                    <span className="detail-note">{language === "en" ? "Case study details can be added here." : "Butiran kajian kes boleh ditambah di sini."}</span>
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -185,7 +200,7 @@ function WorkPanel({
           {sideQuests.map((item) => (
             <article className="simple-row" key={item.title}>
               <span className="simple-row-icon">{item.icon}</span>
-              <div><span className="project-index">{item.category}</span><h4>{item.title}</h4><p>{item.summary}</p></div>
+              <div><span className="project-index">{language === "en" ? item.category : "Eksperimen reka bentuk"}</span><h4>{language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}</h4><p>{language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}</p></div>
               <ArrowRight size={18} />
             </article>
           ))}
@@ -197,7 +212,7 @@ function WorkPanel({
           {aboutNotes.map((item) => (
             <article className="simple-row" key={item.title}>
               <span className="simple-row-icon note-icon">{item.icon}</span>
-              <div><span className="project-index">{item.category}</span><h4>{item.title}</h4><p>{item.summary}</p></div>
+              <div><span className="project-index">{language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}</span><h4>{language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}</h4><p>{language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}</p></div>
               <ArrowRight size={18} />
             </article>
           ))}
@@ -225,6 +240,10 @@ export function SiteExperience() {
     contact: null,
   });
   const copy = sectionCopy[language];
+  const displayRole = language === "en" ? profile.role : "Pereka produk / pembina";
+  const careerSummary = language === "en"
+    ? `${profile.current} ${profile.past}`
+    : "Kini menerajui reka bentuk produk di TUG. Sebelum ini di ThoughtFull dan DKS.";
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -268,7 +287,18 @@ export function SiteExperience() {
 
   function submitContact(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setFormMessage(copy.emailNeeded);
+    if (!CONTACT_EMAIL) {
+      setFormMessage(copy.emailNeeded);
+      return;
+    }
+    const values = new FormData(event.currentTarget);
+    const name = String(values.get("name") ?? "");
+    const email = String(values.get("email") ?? "");
+    const message = String(values.get("message") ?? "");
+    const subject = encodeURIComponent(`Portfolio message from ${name}`);
+    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    setFormMessage(copy.emailReady);
   }
 
   return (
@@ -323,16 +353,16 @@ export function SiteExperience() {
             <div className="availability-badge"><span className="availability-dot" />{copy.current} <strong>TUG</strong></div>
             <p className="card-eyebrow">{copy.introEyebrow}</p>
             <h1 id="intro-title">{profile.name}</h1>
-            <p className="profile-role">{profile.role}</p>
+            <p className="profile-role">{displayRole}</p>
             <p className="profile-description">{copy.introBody}</p>
             <div className="profile-history">
               <span>{copy.past}</span><strong>ThoughtFull <i /> DKS</strong>
             </div>
-            <p className="card-current-copy">{profile.current} {profile.past}</p>
+            <p className="card-current-copy">{careerSummary}</p>
           </div>
           <span className="card-serial">ID · 01</span>
         </div>
-        <p className="screen-caption">{profile.role} <span>·</span> {copy.location}</p>
+        <p className="screen-caption">{displayRole} <span>·</span> {copy.location}</p>
       </section>
 
       <section
@@ -417,7 +447,7 @@ export function SiteExperience() {
               <label>{copy.message}<textarea name="message" required rows={3} placeholder="Tell me a little about it…" /></label>
               <button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></button>
               {formMessage && <p className="form-status" role="status">{formMessage}</p>}
-              <p className="form-setup-note">Contact delivery will be wired to your preferred email address.</p>
+              <p className="form-setup-note">{language === "en" ? "Contact delivery will be wired to your preferred email address." : "Mesej akan dihantar ke alamat e-mel pilihan anda."}</p>
             </form>
           </div>
           <div className="contact-artwork" role="img" aria-label={copy.contactArt}>
