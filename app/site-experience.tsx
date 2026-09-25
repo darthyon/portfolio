@@ -127,6 +127,15 @@ function ProjectPreview({ project }: { project: (typeof projects)[number] }) {
   );
 }
 
+function EmployerMark({ name, monogram }: { name: string; monogram: string }) {
+  return (
+    <span className="employer-mention">
+      <span className="employer-mark" aria-hidden="true">{monogram}</span>
+      <span>{name}</span>
+    </span>
+  );
+}
+
 function WorkPanel({
   folderId,
   language,
@@ -350,8 +359,15 @@ export function SiteExperience() {
             <p className="profile-role">{displayRole}</p>
             <div className="card-work-summary">
               <Separator />
-              <p>{language === "en" ? profile.current : "Kini menerajui reka bentuk produk di TUG."}</p>
-              <p>{language === "en" ? profile.past : "Sebelum ini di ThoughtFull dan DKS."}</p>
+              <p>
+                {language === "en" ? "Currently leading product design at" : "Kini menerajui reka bentuk produk di"}{" "}
+                <EmployerMark name="TUG" monogram="T" />.
+              </p>
+              <p>
+                {language === "en" ? "Previously at" : "Sebelum ini di"}{" "}
+                <EmployerMark name="ThoughtFull" monogram="TF" /> {language === "en" ? "and" : "dan"}{" "}
+                <EmployerMark name="DKS" monogram="DKS" />.
+              </p>
             </div>
           </CardContent>
         </PortfolioCard>
