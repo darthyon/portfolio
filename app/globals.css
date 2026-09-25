@@ -133,7 +133,7 @@ button { color: inherit; }
 .theme-toggle { width: 44px; height: 24px; padding: 2px; border: 1px solid #647086; border-radius: 99px; background: #374154; cursor: pointer; }
 .theme-toggle[data-state="checked"] { background: var(--accent); }
 .theme-toggle [data-slot="switch-thumb"] { width: 18px; height: 18px; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 18%); }
-.theme-toggle[data-state="checked"] [data-slot="switch-thumb"] { transform: translateX(20px); }
+.theme-toggle[data-state="checked"] [data-slot="switch-thumb"] { translate: 20px 0; }
 
 .screen { position: relative; display: flex; min-width: 0; min-height: 0; height: 100%; grid-column: 1; grid-row: 2; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 24px clamp(16px, 4vw, 64px); opacity: 0; pointer-events: none; touch-action: pan-x pinch-zoom; transform: translateY(10px); transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease; visibility: hidden; }
 .screen[data-active="true"] { z-index: 1; opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
