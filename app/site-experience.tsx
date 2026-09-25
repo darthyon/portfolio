@@ -15,18 +15,21 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { PortfolioCard } from "@/components/portfolio-card";
+import { PortfolioInfoCard } from "@/components/portfolio-info-card";
 import {
   aboutNotes,
   folders,
   profile,
   projects,
   sideQuests,
+  type FolderContent,
   type FolderId,
 } from "./portfolio-data";
 import { TowerBuilder } from "./tower-builder";
@@ -39,6 +42,16 @@ const screenCopy: Record<Language, Record<ScreenId, string>> = {
   en: { intro: "Intro", explore: "Explore", play: "Play", contact: "Contact" },
   bm: { intro: "Mula", explore: "Teroka", play: "Main", contact: "Hubungi" },
 };
+
+const bmFolders: Record<FolderId, Pick<FolderContent, "name" | "description">> = {
+  work: { name: "Kerja Terpilih", description: "Beberapa perkara yang saya reka dan bina." },
+  "side-quests": { name: "Projek Sampingan", description: "Eksperimen, alat dan idea yang sedang diteroka." },
+  about: { name: "Tentang Saya", description: "Sedikit tentang cara saya bekerja dan perkara yang saya hargai." },
+};
+
+function localizeFolder(folder: FolderContent, language: Language): FolderContent {
+  return language === "en" ? folder : { ...folder, ...bmFolders[folder.id] };
+}
 
 const sectionCopy = {
   en: {
@@ -126,17 +139,11 @@ function WorkPanel({
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const selectedProject = projects.find((project) => project.id === selectedProjectId);
   const selectedFolder = folders.find((item) => item.id === folderId) ?? folders[0];
-  const localizedFolder = language === "en"
-    ? selectedFolder
-    : {
-        ...selectedFolder,
-        name: folderId === "work" ? "Kerja Terpilih" : folderId === "side-quests" ? "Projek Sampingan" : "Tentang Saya",
-        description: folderId === "work" ? "Beberapa perkara yang saya reka dan bina." : folderId === "side-quests" ? "Eksperimen, alat dan idea yang sedang diteroka." : "Sedikit tentang cara saya bekerja dan perkara yang saya hargai.",
-      };
+  const localizedFolder = localizeFolder(selectedFolder, language);
   const copy = sectionCopy[language];
 
   return (
-    <Card className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
+    <PortfolioCard className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
       <CardHeader className="panel-heading">
         <div className="panel-title-wrap">
           <FolderOpen className="panel-folder-icon" size={30} strokeWidth={1.8} />
@@ -197,11 +204,13 @@ function WorkPanel({
       {folderId === "side-quests" && (
         <div className="simple-list">
           {sideQuests.map((item) => (
-            <Card className="simple-row" role="article" key={item.title}>
-              <span className="simple-row-icon">{item.icon}</span>
-              <div><span className="project-index">{language === "en" ? item.category : "Eksperimen reka bentuk"}</span><h4>{language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}</h4><p>{language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}</p></div>
-              <ArrowRight size={18} />
-            </Card>
+            <PortfolioInfoCard
+              key={item.title}
+              icon={item.icon}
+              category={language === "en" ? item.category : "Eksperimen reka bentuk"}
+              title={language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}
+              summary={language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}
+            />
           ))}
         </div>
       )}
@@ -209,18 +218,21 @@ function WorkPanel({
       {folderId === "about" && (
         <div className="simple-list">
           {aboutNotes.map((item) => (
-            <Card className="simple-row" role="article" key={item.title}>
-              <span className="simple-row-icon note-icon">{item.icon}</span>
-              <div><span className="project-index">{language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}</span><h4>{language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}</h4><p>{language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}</p></div>
-              <ArrowRight size={18} />
-            </Card>
+            <PortfolioInfoCard
+              key={item.title}
+              icon={item.icon}
+              iconStyle="note"
+              category={language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}
+              title={language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}
+              summary={language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}
+            />
           ))}
         </div>
       )}
 
       {selectedProject && <span className="sr-only">{selectedProject.title} selected</span>}
       </CardContent>
-    </Card>
+    </PortfolioCard>
   );
 }
 
@@ -331,7 +343,7 @@ export function SiteExperience() {
         aria-labelledby="intro-title"
         ref={(element) => { screenRefs.current.intro = element; }}
       >
-        <Card className="id-card">
+        <PortfolioCard className="id-card">
           <div className="portrait-stage">
             <div className="portrait-placeholder" role="img" aria-label={copy.photoSlot} />
           </div>
@@ -345,7 +357,7 @@ export function SiteExperience() {
               <p>{language === "en" ? profile.past : "Sebelum ini di ThoughtFull dan DKS."}</p>
             </div>
           </CardContent>
-        </Card>
+        </PortfolioCard>
       </section>
 
       <section
@@ -361,13 +373,7 @@ export function SiteExperience() {
         <div className={`explore-workspace ${panelOpen ? "panel-visible" : ""}`}>
           <div className="folder-grid" role="group" aria-label="Portfolio folders">
           {folders.map((folder, index) => {
-              const localizedFolder = language === "en"
-                ? folder
-                : {
-                    ...folder,
-                    name: folder.id === "work" ? "Kerja Terpilih" : folder.id === "side-quests" ? "Projek Sampingan" : "Tentang Saya",
-                    description: folder.id === "work" ? "Beberapa perkara yang saya reka dan bina." : folder.id === "side-quests" ? "Eksperimen, alat dan idea yang sedang diteroka." : "Sedikit tentang cara saya bekerja dan perkara yang saya hargai.",
-                  };
+              const localizedFolder = localizeFolder(folder, language);
               const isSelected = activeFolder === folder.id && panelOpen;
               return (
                 <Button
@@ -444,14 +450,14 @@ export function SiteExperience() {
             </form>
           </div>
           <div className="contact-artwork" role="img" aria-label={copy.contactArt}>
-            <Card className="contact-image-slot">
+            <PortfolioCard className="contact-image-slot">
               <span className="contact-image-stamp">IMAGE / 04</span>
               <span className="contact-image-shape shape-a" />
               <span className="contact-image-shape shape-b" />
               <span className="contact-image-shape shape-c" />
               <Badge variant="outline" className="contact-art-caption"><span className="availability-dot" />{copy.contactArt}</Badge>
-            </Card>
-            <Card className="contact-art-note"><span>LET’S MAKE SOMETHING USEFUL</span><ArrowRight size={17} /></Card>
+            </PortfolioCard>
+            <PortfolioCard elevation="subtle" className="contact-art-note"><span>LET’S MAKE SOMETHING USEFUL</span><ArrowRight size={17} /></PortfolioCard>
           </div>
         </div>
       </section>

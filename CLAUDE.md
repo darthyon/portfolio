@@ -16,4 +16,5 @@ A personal portfolio presented as a mock browser. The one-page flow is an ID-car
 
 - Define interfaces in `app/portfolio-data.ts` before adding data consumers.
 - Use the local shadcn/ui components and theme tokens for controls, forms, badges, progress, and card surfaces. Use local CSS for the mock browser composition and artwork. Don't add services or data storage without approval.
+- Use `PortfolioCard` for card surfaces; choose its `raised` or `subtle` elevation instead of defining a new border/shadow per screen. Document shared UI patterns in README.md.
 - Use `npm run lint`, `npx tsc --noEmit`, and `npm run build`; do not run tests or launch browser previews in chat.

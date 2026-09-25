@@ -4,9 +4,10 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { PortfolioCard } from "@/components/portfolio-card";
 
 type TowerHeights = { west: number; east: number };
 type BuilderLanguage = "en" | "bm";
@@ -290,7 +291,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
 
   return (
     <div className="builder-layout">
-      <Card className="builder-main">
+      <PortfolioCard className="builder-main">
         <div
           className="builder-canvas"
           ref={mountRef}
@@ -357,9 +358,9 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           {selectedHeight >= MAX_LEVELS && !full && <p className="builder-feedback" role="status">{copy.max}</p>}
           {full && <p className="builder-feedback complete" role="status">✦ Both towers complete. Nice work.</p>}
         </div>
-      </Card>
+      </PortfolioCard>
 
-      <Card className="tower-reference" role="complementary">
+      <PortfolioCard className="tower-reference" role="complementary">
         <div className="reference-visual" aria-hidden="true">
           <div className="reference-tower tower-left"><span /><span /><span /><i /></div>
           <div className="reference-tower tower-right"><span /><span /><span /><i /></div>
@@ -377,7 +378,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
             </a>
           </Button>
         </CardContent>
-      </Card>
+      </PortfolioCard>
     </div>
   );
 }
