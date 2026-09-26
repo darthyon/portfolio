@@ -1,28 +1,26 @@
-# Youn Yusuff portfolio
+# Yon Yusuff portfolio
 
-A one-page portfolio presented inside a browser-style frame. It has an ID-card introduction, folder-based project browser, a small Three.js Petronas Twin Towers builder, and a contact form. It stays within the viewport and changes one screen at a time through the bottom navigation, mouse wheel, touch swipes, and page up/down keys.
+A one-page portfolio inside a browser-style frame. Visitors can explore selected work, read about the designer, play with a small Petronas Twin Towers builder, and use contact actions below the intro's employer details.
 
-## Component system
+## Stack
 
-- Use the local shadcn/ui components in `components/ui` for controls, form fields, badges, separators, progress, and Card composition.
-- Use `PortfolioCard` from `components/portfolio-card.tsx` for card surfaces. Its default `raised` elevation is for main surfaces; `elevation="subtle"` is for cards inside another surface. Both are borderless and use the light/dark shadow tokens in `app/globals.css`.
-- Use `PortfolioInfoCard` from `components/portfolio-info-card.tsx` for the static Side Quests and About entries. Pass the localized category, title, and summary as props.
-- Explore uses a single card-folder selection at a time, following the [useLayouts Card Folder](https://uselayouts.com/docs/components/card-folder) reference. Folder contents appear as compact `ProjectRowCard` actions beside the selected folder on wider screens; narrow screens give the contents the full available area.
-- `ProjectRowCard` uses a shadcn Button for its single keyboard-accessible action. Selecting a project replaces the folder browser with a case-study view; its back action returns to the same project list. Keep the project preview, metadata, title, description, and arrow together in this component.
-- Put layout and artwork rules in `app/globals.css`. Keep card elevation in the shared tokens there instead of adding a separate border or shadow to each screen.
-- Project rows are shadcn Buttons so each row remains one keyboard-accessible action; they use the same subtle shadow token as nested cards.
-- The full-screen switcher is a set of discrete shadcn Buttons with one active state, inspired by [useLayouts Discrete Tabs](https://uselayouts.com/docs/components/discrete-tabs). It does not need the source component's extra motion or icon dependencies.
+- Next.js App Router and TypeScript
+- Tailwind CSS 4 and local shadcn/ui primitives
+- Three.js for the tower builder
+- npm
 
-```tsx
-import { PortfolioCard } from "@/components/portfolio-card";
-import { CardContent } from "@/components/ui/card";
+The app has no backend or stored visitor data.
 
-<PortfolioCard elevation="subtle">
-  <CardContent>Card content</CardContent>
-</PortfolioCard>
-```
+## Structure
 
-The surface styling takes its rounded shape and soft elevation cue from the [useLayouts Bento Card](https://uselayouts.com/docs/components/bento-card), adapted to this portfolio's borderless look. The mock browser structure and Three.js canvas remain site-specific.
+- `app/site-experience.tsx` owns the shared browser chrome, screen navigation, theme, language, and screen-level state.
+- `components/screens/` contains one component for each screen and the shared screen copy.
+- `app/portfolio-data.ts` contains typed profile, folder, project, and contact data.
+- `app/tower-builder.tsx` contains the interactive Three.js scene.
+- `components/portfolio-card.tsx` defines the shared portfolio card surface. Use its `raised` or `subtle` elevation.
+- `app/globals.css` contains the mock-browser layout and artwork styles.
+
+Keep project descriptions and visual previews together in the typed portfolio data. Add local UI primitives only as the interface needs them.
 
 ## Run locally
 
@@ -33,17 +31,16 @@ npm run dev
 
 ## Update portfolio content
 
-- Edit profile and project content in `app/portfolio-data.ts`.
-- Replace `public/portrait-youn.png` to update the intro portrait.
-- Replace the matching files in `public/logos/` to update the employer marks.
-- Set the contact recipient before enabling email delivery in `app/site-experience.tsx`.
-
-The contact screen uses a centered note composer and has no backend or stored visitor submissions. Email delivery remains disconnected until a recipient address is supplied.
+- Edit profile, folders, projects, and contact channels in `app/portfolio-data.ts`.
+- The intro has a Need to talk? action that opens a contact dialog with LinkedIn, email, and a link directing visitors to LinkedIn if they need a phone number. Do not publish or collect the phone number, add a GitHub link, or add a public résumé without the owner's consent.
+- Replace `public/portrait-yon.png` to update the portrait.
+- Replace matching files in `public/logos/` to update employer marks.
+- Add only owner-approved contact details to `contactChannels`. Email links open the visitor's email app; social links use the supplied profile URLs.
 
 ## Checks
 
 ```sh
-npx tsc --noEmit
 npm run lint
+npx tsc --noEmit
 npm run build
 ```

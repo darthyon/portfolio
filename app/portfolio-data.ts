@@ -17,6 +17,32 @@ export interface FolderContent {
   color: "blue" | "yellow" | "slate";
 }
 
+export type ContactChannelKind = "email" | "linkedin";
+
+export interface ContactChannel {
+  kind: ContactChannelKind;
+  label: string;
+  value: string;
+  href: string;
+}
+
+export const linkedinUrl = "https://www.linkedin.com/in/yon-yusuff/";
+
+export const contactChannels: readonly ContactChannel[] = [
+  {
+    kind: "linkedin",
+    label: "LinkedIn",
+    value: "linkedin.com/in/yon-yusuff",
+    href: linkedinUrl,
+  },
+  {
+    kind: "email",
+    label: "Email",
+    value: "yooneggy8@gmail.com",
+    href: "mailto:yooneggy8@gmail.com",
+  },
+];
+
 export const folders: readonly FolderContent[] = [
   {
     id: "work",
@@ -99,7 +125,7 @@ export const aboutNotes = [
 ] as const;
 
 export const profile = {
-  name: "Youn Yusuff",
+  name: "Yon Yusuff",
   role: "Product designer / builder",
   current: "Currently leading product design at TUG.",
   past: "Previously at ThoughtFull and DKSH.",

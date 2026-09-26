@@ -1,320 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
   ChevronDown,
-  Folder,
-  FolderOpen,
-  Mail,
   MapPin,
   Moon,
   Sun,
 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { PortfolioCard } from "@/components/portfolio-card";
-import { PortfolioInfoCard } from "@/components/portfolio-info-card";
-import {
-  aboutNotes,
-  folders,
-  profile,
-  projects,
-  sideQuests,
-  type FolderContent,
-  type FolderId,
-  type PortfolioProject,
-} from "./portfolio-data";
-import { TowerBuilder } from "./tower-builder";
+import { ExploreScreen } from "@/components/screens/explore-screen";
+import { IntroScreen } from "@/components/screens/intro-screen";
+import { PlayScreen } from "@/components/screens/play-screen";
+import { screenCopy, screens, sectionCopy, type Language, type ScreenId } from "@/components/screens/copy";
+import { type FolderId } from "./portfolio-data";
 
-type ScreenId = "intro" | "explore" | "play" | "contact";
-type Language = "en" | "bm";
-const screens: readonly ScreenId[] = ["intro", "explore", "play", "contact"];
 const screenIndex = (screen: ScreenId) => screens.indexOf(screen);
-const CONTACT_EMAIL = "";
-
-const screenCopy: Record<Language, Record<ScreenId, string>> = {
-  en: { intro: "Intro", explore: "Explore", play: "Play", contact: "Contact" },
-  bm: { intro: "Mula", explore: "Teroka", play: "Main", contact: "Hubungi" },
-};
-
-const bmFolders: Record<FolderId, Pick<FolderContent, "name" | "description">> = {
-  work: { name: "Kerja Terpilih", description: "Beberapa perkara yang saya reka dan bina." },
-  "side-quests": { name: "Projek Sampingan", description: "Eksperimen, alat dan idea yang sedang diteroka." },
-  about: { name: "Tentang Saya", description: "Sedikit tentang cara saya bekerja dan perkara yang saya hargai." },
-};
-
-function localizeFolder(folder: FolderContent, language: Language): FolderContent {
-  return language === "en" ? folder : { ...folder, ...bmFolders[folder.id] };
-}
-
-const sectionCopy = {
-  en: {
-    current: "Bought a new Smiski",
-    exploreEyebrow: "The work folder",
-    exploreTitle: "A few things I’ve designed and built.",
-    backFolders: "All folders",
-    caseStudy: "Case study",
-    caseStudyBack: "Back to projects",
-    caseStudyPreview: "In the preview",
-    openFolder: "Open folder",
-    playEyebrow: "Play a little",
-    playTitle: "Build the towers.",
-    playBody: "A small building challenge for bigger ideas.",
-    contactTitle: "Let’s talk.",
-    contactBody:
-      "I’m open to thoughtful conversations about product work, collaboration, and new ideas.",
-    name: "Your name",
-    email: "Your email",
-    message: "What’s on your mind?",
-    send: "Send a message",
-    emailNeeded: "Add your preferred contact email to activate this form.",
-    emailReady: "Your email app should open with this draft.",
-    contactSetup: "Email delivery isn’t connected yet.",
-    location: profile.location,
-    portraitAlt: "3D portrait of Youn Yusuff",
-  },
-  bm: {
-    current: "Beli Smiski baharu",
-    exploreEyebrow: "Folder kerja",
-    exploreTitle: "Beberapa perkara yang saya reka dan bina.",
-    backFolders: "Semua folder",
-    caseStudy: "Kajian kes",
-    caseStudyBack: "Kembali ke projek",
-    caseStudyPreview: "Dalam pratonton",
-    openFolder: "Buka folder",
-    playEyebrow: "Jom bermain",
-    playTitle: "Bina menara.",
-    playBody: "Cabaran membina kecil untuk idea besar.",
-    contactTitle: "Mari berbual.",
-    contactBody:
-      "Saya terbuka untuk berbual tentang kerja produk, kerjasama dan idea baharu.",
-    name: "Nama anda",
-    email: "E-mel anda",
-    message: "Apa yang ingin anda sampaikan?",
-    send: "Hantar mesej",
-    emailNeeded: "Tambah alamat e-mel anda untuk mengaktifkan borang ini.",
-    emailReady: "Aplikasi e-mel anda sepatutnya dibuka dengan draf ini.",
-    contactSetup: "Penghantaran e-mel belum disambungkan.",
-    location: profile.location,
-    portraitAlt: "Potret 3D Youn Yusuff",
-  },
-} as const;
-
-function ProjectPreview({ project }: { project: (typeof projects)[number] }) {
-  return (
-    <span className={`project-preview ${project.color}`} aria-hidden="true">
-      <span className="phone-frame">
-        <span className="phone-speaker" />
-        <span className="phone-screen">
-          <span className="phone-heading">
-            <span className="phone-app-mark" />
-            <strong>{project.previewLabel}</strong>
-          </span>
-          {project.previewItems.map((item, index) => (
-            <span className="phone-list-item" key={item}>
-              <span className={`phone-item-icon item-${index + 1}`} />
-              <span>{item}</span>
-              <ArrowRight size={10} strokeWidth={2.5} />
-            </span>
-          ))}
-        </span>
-      </span>
-      <span className="preview-orbit orbit-one" />
-      <span className="preview-orbit orbit-two" />
-    </span>
-  );
-}
-
-function localizeProject(project: PortfolioProject, language: Language): Pick<PortfolioProject, "summary" | "category"> {
-  if (language === "en") return { summary: project.summary, category: project.category };
-  if (project.id === "mysubsidi") {
-    return { summary: "Penjejak subsidi kerajaan untuk rakyat Malaysia.", category: "Perkhidmatan awam · Reka bentuk produk" };
-  }
-  if (project.id === "welluber") {
-    return { summary: "Pengangkutan penjagaan kesihatan atas permintaan.", category: "Penjagaan kesihatan · Reka bentuk produk" };
-  }
-  return {
-    summary: "Platform logistik yang menghubungkan perniagaan dan pemandu lori.",
-    category: "Logistik · Reka bentuk produk",
-  };
-}
-
-function EmployerMark({ name, logoSrc }: { name: string; logoSrc: string }) {
-  return (
-    <span className="employer-mention">
-      <span className="employer-mark" aria-hidden="true">
-        <Image src={logoSrc} alt="" width={28} height={28} unoptimized draggable={false} />
-      </span>
-      <span>{name}</span>
-    </span>
-  );
-}
-
-function FolderVisual({ isOpen }: { isOpen: boolean }) {
-  return (
-    <span className="folder-art" aria-hidden="true">
-      {isOpen ? <FolderOpen size={78} strokeWidth={1.3} /> : <Folder size={78} strokeWidth={1.3} />}
-    </span>
-  );
-}
-
-function ProjectRowCard({
-  project,
-  index,
-  language,
-  onSelect,
-}: {
-  project: PortfolioProject;
-  index: number;
-  language: Language;
-  onSelect: () => void;
-}) {
-  const { summary, category } = localizeProject(project, language);
-
-  return (
-    <Button
-      variant="ghost"
-      className={`project-row ${project.color}`}
-      id={`project-card-${project.id}`}
-      onClick={onSelect}
-      aria-label={`${language === "en" ? "Open case study:" : "Buka kajian kes:"} ${project.title}`}
-    >
-      <ProjectPreview project={project} />
-      <span className="project-row-copy">
-        <span className="project-index">0{index + 1} / {category}</span>
-        <strong>{project.title}</strong>
-        <span className="project-summary">{summary}</span>
-      </span>
-      <span className="project-arrow"><ArrowRight size={18} /></span>
-    </Button>
-  );
-}
-
-function WorkPanel({
-  folderId,
-  language,
-  onClose,
-  onProjectSelect,
-}: {
-  folderId: FolderId;
-  language: Language;
-  onClose: () => void;
-  onProjectSelect: (projectId: string) => void;
-}) {
-  const selectedFolder = folders.find((item) => item.id === folderId) ?? folders[0];
-  const localizedFolder = localizeFolder(selectedFolder, language);
-  const copy = sectionCopy[language];
-
-  return (
-    <PortfolioCard data-folder={folderId} className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
-      <CardHeader className="panel-heading">
-        <div className="panel-title-wrap">
-          <FolderOpen className="panel-folder-icon" size={30} strokeWidth={1.8} />
-          <div>
-            <CardTitle><h3>{localizedFolder.name}</h3></CardTitle>
-            <CardDescription><p>{localizedFolder.description}</p></CardDescription>
-          </div>
-        </div>
-        <Button variant="ghost" size="icon" className="icon-button close-panel" onClick={onClose} aria-label={copy.backFolders}>
-          <ArrowLeft size={19} />
-        </Button>
-      </CardHeader>
-
-      <CardContent className="panel-body">
-      {folderId === "work" && (
-        <div className="project-list">
-          {projects.map((project, index) => (
-            <ProjectRowCard
-              key={project.id}
-              project={project}
-              index={index}
-              language={language}
-              onSelect={() => onProjectSelect(project.id)}
-            />
-          ))}
-        </div>
-      )}
-
-      {folderId === "side-quests" && (
-        <div className="simple-list">
-          {sideQuests.map((item) => (
-            <PortfolioInfoCard
-              key={item.title}
-              icon={item.icon}
-              category={language === "en" ? item.category : "Eksperimen reka bentuk"}
-              title={language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}
-              summary={language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}
-            />
-          ))}
-        </div>
-      )}
-
-      {folderId === "about" && (
-        <div className="simple-list">
-          {aboutNotes.map((item) => (
-            <PortfolioInfoCard
-              key={item.title}
-              icon={item.icon}
-              iconStyle="note"
-              category={language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}
-              title={language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}
-              summary={language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}
-            />
-          ))}
-        </div>
-      )}
-
-      </CardContent>
-    </PortfolioCard>
-  );
-}
-
-function ProjectCaseStudy({
-  project,
-  language,
-  onBack,
-}: {
-  project: PortfolioProject;
-  language: Language;
-  onBack: () => void;
-}) {
-  const copy = sectionCopy[language];
-  const { summary, category } = localizeProject(project, language);
-
-  return (
-    <div className={`project-case-study ${project.color}`}>
-      <Button variant="ghost" className="case-study-back" onClick={onBack}>
-        <ArrowLeft size={17} />
-        {copy.caseStudyBack}
-      </Button>
-      <div className="case-study-layout">
-        <div className="case-study-copy">
-          <span className="project-index">{copy.caseStudy} / {category}</span>
-          <h2 id="case-study-title">{project.title}</h2>
-          <p className="case-study-summary">{summary}</p>
-          <div className="case-study-label">{copy.caseStudyPreview}</div>
-          <div className="case-study-tags">
-            {project.previewItems.map((item) => <span key={item}>{item}</span>)}
-          </div>
-        </div>
-        <PortfolioCard role="img" elevation="subtle" className="case-study-artwork" aria-label={`${project.title} interface preview`}>
-          <ProjectPreview project={project} />
-        </PortfolioCard>
-      </div>
-    </div>
-  );
-}
 
 export function SiteExperience() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>("intro");
@@ -323,13 +25,8 @@ export function SiteExperience() {
   const [activeFolder, setActiveFolder] = useState<FolderId | null>(null);
   const [caseStudyProjectId, setCaseStudyProjectId] = useState<string | null>(null);
   const [builderStarted, setBuilderStarted] = useState(false);
-  const [formMessage, setFormMessage] = useState("");
   const lastWheelNavigation = useRef(0);
   const copy = sectionCopy[language];
-  const displayRole = language === "en" ? profile.role : "Pereka produk / pembina";
-  const activeFolderData = activeFolder ? folders.find((folder) => folder.id === activeFolder) ?? folders[0] : null;
-  const localizedActiveFolder = activeFolderData ? localizeFolder(activeFolderData, language) : null;
-  const activeCaseStudyProject = projects.find((project) => project.id === caseStudyProjectId) ?? null;
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -356,6 +53,7 @@ export function SiteExperience() {
 
     function handleWheel(event: WheelEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.closest("dialog[open]")) return;
       if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
       event.preventDefault();
       if (Math.abs(event.deltaY) < 24 || Date.now() - lastWheelNavigation.current < 760) return;
@@ -371,7 +69,7 @@ export function SiteExperience() {
     function handleTouchEnd(event: TouchEvent) {
       if (touchStartY === null) return;
       const target = touchTarget instanceof HTMLElement ? touchTarget : null;
-      if (target?.closest("input, textarea, select, .builder-canvas, [contenteditable='true']")) {
+      if (target?.closest("dialog[open], input, textarea, select, .builder-canvas, [contenteditable='true']")) {
         touchStartY = null;
         touchTarget = null;
         return;
@@ -388,6 +86,7 @@ export function SiteExperience() {
 
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
+      if (target?.closest("dialog[open]")) return;
       if (target?.closest("input, textarea, select, button, a, [contenteditable='true']")) return;
       if (event.key === "PageDown" || event.key === "ArrowDown" || event.key === " ") {
         event.preventDefault();
@@ -409,22 +108,6 @@ export function SiteExperience() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeScreen]);
-
-  function submitContact(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!CONTACT_EMAIL) {
-      setFormMessage(copy.emailNeeded);
-      return;
-    }
-    const values = new FormData(event.currentTarget);
-    const name = String(values.get("name") ?? "");
-    const email = String(values.get("email") ?? "");
-    const message = String(values.get("message") ?? "");
-    const subject = encodeURIComponent(`Portfolio message from ${name}`);
-    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    setFormMessage(copy.emailReady);
-  }
 
   return (
     <main className="portfolio-shell">
@@ -455,181 +138,25 @@ export function SiteExperience() {
         </div>
       </header>
 
-      <section
-        className="screen intro-screen"
-        id="intro"
-        aria-labelledby="intro-title"
-        data-active={activeScreen === "intro"}
-        aria-hidden={activeScreen !== "intro"}
-        inert={activeScreen !== "intro"}
-      >
-        <PortfolioCard className="id-card">
-          <div className="portrait-stage">
-            <div className="portrait-backdrop" aria-hidden="true" />
-            <Image
-              className="portrait-image"
-              src="/portrait-youn.png"
-              alt={copy.portraitAlt}
-              width={1254}
-              height={1254}
-              fetchPriority="high"
-              preload
-              unoptimized
-              draggable={false}
-            />
-          </div>
-          <CardContent className="card-content">
-            <Badge variant="outline" className="availability-badge"><span className="availability-dot" />{copy.current}</Badge>
-            <h1 id="intro-title">{profile.name}</h1>
-            <p className="profile-role">{displayRole}</p>
-            <div className="card-work-summary">
-              <Separator />
-              <p>
-                {language === "en" ? "Currently leading product design at" : "Kini menerajui reka bentuk produk di"}{" "}
-                <EmployerMark name="TUG" logoSrc="/logos/tug.png" />.
-              </p>
-              <p>
-                {language === "en" ? "Previously at" : "Sebelum ini di"}{" "}
-                <EmployerMark name="ThoughtFull" logoSrc="/logos/thoughtfull.png" /> {language === "en" ? "and" : "dan"}{" "}
-                <EmployerMark name="DKSH" logoSrc="/logos/dksh.jpg" />.
-              </p>
-            </div>
-          </CardContent>
-        </PortfolioCard>
-      </section>
-
-      <section
-        className="screen explore-screen"
-        id="explore"
-        aria-label={activeCaseStudyProject ? `${copy.caseStudy}: ${activeCaseStudyProject.title}` : copy.exploreTitle}
-        data-active={activeScreen === "explore"}
-        aria-hidden={activeScreen !== "explore"}
-        inert={activeScreen !== "explore"}
-      >
-        {activeCaseStudyProject ? (
-          <ProjectCaseStudy
-            project={activeCaseStudyProject}
-            language={language}
-            onBack={() => {
-              setCaseStudyProjectId(null);
-              window.requestAnimationFrame(() => document.getElementById(`project-card-${activeCaseStudyProject.id}`)?.focus());
-            }}
-          />
-        ) : (
-          <>
-            <div className="section-heading explore-heading">
-              <span className="section-eyebrow"><span className="eyebrow-icon">✳</span>{copy.exploreEyebrow}</span>
-              <h2 id="explore-title">{copy.exploreTitle}</h2>
-            </div>
-            <div className={`explore-workspace ${activeFolder ? "folder-active" : ""}`}>
-              {activeFolder ? (
-                <div className={`folder-context ${activeFolderData?.color ?? "blue"}`}>
-                  <FolderVisual isOpen />
-                  <strong>{localizedActiveFolder?.name}</strong>
-                  <span className="folder-description">{localizedActiveFolder?.description}</span>
-                </div>
-              ) : (
-                <div className="folder-grid" role="group" aria-label="Portfolio folders">
-                  {folders.map((folder, index) => {
-                    const localizedFolder = localizeFolder(folder, language);
-                    return (
-                      <Button
-                        variant="ghost"
-                        className={`folder-card ${folder.color}`}
-                        key={folder.id}
-                        id={`folder-tab-${folder.id}`}
-                        onClick={() => setActiveFolder(folder.id)}
-                        aria-label={`${copy.openFolder}: ${localizedFolder.name}`}
-                      >
-                        <FolderVisual isOpen={false} />
-                        <strong>{localizedFolder.name}</strong>
-                        <span className="folder-description">{localizedFolder.description}</span>
-                        <span className="folder-number">0{index + 1}</span>
-                      </Button>
-                    );
-                  })}
-                </div>
-              )}
-              {activeFolder && (
-                <div id="folder-panel" className="folder-panel-wrap">
-                  <WorkPanel
-                    folderId={activeFolder}
-                    language={language}
-                    onClose={() => {
-                      const folderToFocus = activeFolder;
-                      setActiveFolder(null);
-                      window.requestAnimationFrame(() => folderToFocus && document.getElementById(`folder-tab-${folderToFocus}`)?.focus());
-                    }}
-                    onProjectSelect={setCaseStudyProjectId}
-                  />
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </section>
-
-      <section
-        className="screen play-screen"
-        id="play"
-        aria-labelledby="play-title"
-        data-active={activeScreen === "play"}
-        aria-hidden={activeScreen !== "play"}
-        inert={activeScreen !== "play"}
-      >
-        <div className="section-heading play-heading">
-          <span className="section-eyebrow"><span className="eyebrow-icon">✦</span>{copy.playEyebrow} <span aria-hidden="true">🎮</span></span>
-          <h2 id="play-title">{copy.playTitle}</h2>
-          <p>{copy.playBody}</p>
-        </div>
-        {builderStarted && <TowerBuilder language={language} theme={theme} />}
-      </section>
-
-      <section
-        className="screen contact-screen"
-        id="contact"
-        aria-labelledby="contact-title"
-        data-active={activeScreen === "contact"}
-        aria-hidden={activeScreen !== "contact"}
-        inert={activeScreen !== "contact"}
-      >
-        <div className="contact-layout">
-          <div className="contact-copy">
-            <h2 id="contact-title">{copy.contactTitle}</h2>
-            <p className="contact-description">{copy.contactBody}</p>
-          </div>
-          <PortfolioCard className="contact-composer" elevation="subtle" aria-labelledby="contact-composer-title">
-            <CardHeader className="contact-composer-header">
-              <span className="contact-composer-icon" aria-hidden="true"><Mail size={19} /></span>
-              <div className="contact-recipient">
-                <CardDescription>{language === "en" ? "Message to" : "Mesej kepada"}</CardDescription>
-                <CardTitle id="contact-composer-title">Youn Yusuff</CardTitle>
-              </div>
-              <span className="contact-composer-mark" aria-hidden="true">NOTE / 01</span>
-            </CardHeader>
-            <CardContent className="contact-composer-content">
-              <form className="contact-form" onSubmit={submitContact}>
-                <Field className="contact-field">
-                  <FieldLabel htmlFor="contact-name">{copy.name}</FieldLabel>
-                  <Input id="contact-name" name="name" type="text" autoComplete="name" required placeholder="Alex Morgan" />
-                </Field>
-                <Field className="contact-field">
-                  <FieldLabel htmlFor="contact-email">{copy.email}</FieldLabel>
-                  <Input id="contact-email" name="email" type="email" autoComplete="email" required placeholder="alex@example.com" />
-                </Field>
-                <Field className="contact-field contact-message-field">
-                  <FieldLabel htmlFor="contact-message">{copy.message}</FieldLabel>
-                  <Textarea id="contact-message" name="message" required rows={3} placeholder="Tell me a little about it…" />
-                </Field>
-                <Button className="send-button" type="submit">{copy.send}<ArrowUpRight size={17} /></Button>
-                {formMessage && <Alert variant={CONTACT_EMAIL ? "default" : "destructive"} className="form-status"><AlertDescription>{formMessage}</AlertDescription></Alert>}
-                <FieldDescription className="form-setup-note">{copy.contactSetup}</FieldDescription>
-              </form>
-            </CardContent>
-          </PortfolioCard>
-        </div>
-      </section>
-
+      <IntroScreen active={activeScreen === "intro"} copy={copy} language={language} />
+      <ExploreScreen
+        active={activeScreen === "explore"}
+        activeFolder={activeFolder}
+        caseStudyProjectId={caseStudyProjectId}
+        copy={copy}
+        language={language}
+        onCaseStudyBack={() => setCaseStudyProjectId(null)}
+        onFolderClose={() => setActiveFolder(null)}
+        onFolderSelect={setActiveFolder}
+        onProjectSelect={setCaseStudyProjectId}
+      />
+      <PlayScreen
+        active={activeScreen === "play"}
+        builderStarted={builderStarted}
+        copy={copy}
+        language={language}
+        theme={theme}
+      />
       <nav className="screen-switcher" aria-label="Portfolio screens">
         {screens.map((screen, index) => (
           <Button

@@ -1,18 +1,17 @@
 # Handoff
 
 ## State
-- Private portfolio Site registered; one-page browser shell and all four screens implemented.
-- Screen controls use local shadcn/ui components. Card surfaces share `PortfolioCard` with raised/subtle borderless elevation and mapped light/dark tokens; the intro has no lanyard.
-- The browser shell now holds one active screen in a viewport-sized grid. Screen navigation uses the discrete tab inspiration documented in README.md; manual visual review is pending.
-- Explore now opens one card folder at a time. Project mini cards open a focused case-study view without the folder UI; the back action returns to that folder. README.md records the interaction and responsive behavior.
-- Light/dark and English/Bahasa Melayu controls are implemented; the KLCC builder is a small interactive Three.js scene.
-- The intro uses the supplied transparent 3D portrait and employer logos from `public/portrait-youn.png` and `public/logos/`. Contact is a centered note composer; email delivery still needs the owner's recipient address.
+- The local portfolio uses Next.js App Router, TypeScript, Tailwind CSS 4, local shadcn/ui components, and npm.
+- Sites/Vinext/Cloudflare build wiring was removed from this repository. The previously hosted Site was not changed.
+- Global screen, theme, language, and navigation state lives in `app/site-experience.tsx`; screen UI and shared copy live in `components/screens/`.
+- The app is frontend-only. The tower builder is interactive. Intro contact opens a dialog with LinkedIn, email, and a LinkedIn prompt for visitors who need a phone number. No phone number, GitHub, or résumé link is published.
 
 ## Next
-- Review folder selection, project-to-case-study back navigation, and screen fit at desktop, mobile, and short viewport sizes; no in-chat preview was run.
-- Replace other portfolio images as the owner supplies them, then confirm profile and project copy.
-- Wire the contact recipient and enable mailto submission.
+- Manually review screen navigation and fit on desktop, mobile, and short viewports.
+- Confirm profile and project copy, then replace portrait and employer assets when supplied.
+- Only add a public résumé link if the owner decides to share a downloadable PDF.
 
 ## Blockers-decisions
-- Keep the Site private until the owner supplies assets/content and asks for public access.
-- Browser preview and automated tests are intentionally not run in chat.
+- Do not add a backend, persist visitor data, or invent contact details.
+- Do not reconnect this repository to Sites or change the hosted version without an explicit request.
+- Run `npm run lint`, `npx tsc --noEmit`, and `npm run build`; no tests or previews are run in chat.

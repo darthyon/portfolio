@@ -22,8 +22,8 @@ export function PortfolioInfoCard({
     <PortfolioCard elevation="subtle" className="simple-row" role="article">
       <span className={`simple-row-icon ${iconStyle === "note" ? "note-icon" : ""}`} aria-hidden="true">{icon}</span>
       <div>
-        <span className="project-index">{category}</span>
         <h4>{title}</h4>
+        <span className="project-meta">{category}</span>
         <p>{summary}</p>
       </div>
     </PortfolioCard>

@@ -121,7 +121,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
         towerA: "Tower A", towerB: "Tower B", addBrick: "Add a brick", reset: "Start over",
         progress: "Build progress", skybridge: "Skybridge unlocked", skybridgeHint: "Both towers are tall enough for the bridge.",
         bridgeHint: "Build both towers to level 4 to unlock the skybridge.", ready: "Your towers are taking shape.",
-        drag: "Drag the model to turn it", reference: "A real-world reference", source: "Tower facts",
+        drag: "Drag the model to turn it", source: "Tower facts",
         referenceText: "The PETRONAS Twin Towers in Kuala Lumpur are 88 storeys each. Their double-decker skybridge connects levels 41 and 42.",
         loading: "Preparing the build space…", rotateLeft: "Rotate left", rotateRight: "Rotate right",
         max: "This tower has reached the top. Try the other one.",
@@ -130,7 +130,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
         towerA: "Menara A", towerB: "Menara B", addBrick: "Tambah bata", reset: "Mula semula",
         progress: "Kemajuan binaan", skybridge: "Jambatan langit dibuka", skybridgeHint: "Kedua-dua menara sudah cukup tinggi untuk jambatan.",
         bridgeHint: "Bina kedua-dua menara sehingga aras 4 untuk membuka jambatan langit.", ready: "Menara anda mula terbentuk.",
-        drag: "Seret model untuk memutarkannya", reference: "Rujukan sebenar", source: "Fakta menara",
+        drag: "Seret model untuk memutarkannya", source: "Fakta menara",
         referenceText: "Menara Berkembar PETRONAS di Kuala Lumpur masing-masing mempunyai 88 tingkat. Jambatan langit dua tingkatnya menghubungkan aras 41 dan 42.",
         loading: "Menyediakan ruang binaan…", rotateLeft: "Pusing ke kiri", rotateRight: "Pusing ke kanan",
         max: "Menara ini sudah sampai ke puncak. Cuba bina menara sebelah.",
@@ -369,7 +369,6 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           <span className="reference-coordinate">3°09′N 101°42′E</span>
         </div>
         <CardContent className="reference-copy">
-          <span className="reference-eyebrow">{copy.reference}</span>
           <h3>Petronas Twin Towers</h3>
           <p>{copy.referenceText}</p>
           <Button asChild variant="link" className="reference-source">
