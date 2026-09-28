@@ -6,6 +6,7 @@ import Image from "next/image";
 import {
   ArrowUpRight,
   ContactRound,
+  FileText,
   Mail,
   MessageCircle,
   X,
@@ -13,8 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { contactChannels, linkedinUrl, profile, type ContactChannelKind } from "@/app/portfolio-data";
+import { contactChannels, linkedinUrl, profile, resumeUrl, type ContactChannelKind } from "@/app/portfolio-data";
 import type { Language, SectionCopy } from "./copy";
 import { PortfolioCard } from "@/components/portfolio-card";
 
@@ -124,7 +124,6 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
           <h1 id="intro-title">{profile.name}</h1>
           <p className="profile-role">{displayRole}</p>
           <div className="card-work-summary">
-            <Separator />
             <p>
               {language === "en" ? "Currently leading product design at" : "Kini menerajui reka bentuk produk di"}{" "}
               <EmployerMark name="TUG" logoSrc="/logos/tug.png" />.
@@ -148,6 +147,12 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
             >
               <MessageCircle size={16} strokeWidth={1.9} />
               {copy.needToTalk}
+            </Button>
+            <Button asChild className="intro-view-resume">
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" aria-label={copy.viewResumeLabel}>
+                <FileText size={16} strokeWidth={1.9} />
+                {copy.viewResume}
+              </a>
             </Button>
           </nav>
         </CardContent>

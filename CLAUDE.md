@@ -2,12 +2,12 @@
 
 ## Product
 
-A personal portfolio presented as a mock browser. It has an ID-card intro with contact actions, folder-based selected work, and a small Petronas Twin Towers builder. Show one screen at a time in a locked viewport. Support the screen switcher, wheel, swipe, keyboard, light/dark theme, and English/Bahasa Melayu.
+A personal portfolio presented as a mock browser. It has an ID-card intro with contact actions, folder-based selected work, and a small timed block-building game (spin for a Malaysian landmark, build it, compare with a block-built reference). Show one screen at a time in a locked viewport. Support the screen switcher, wheel, swipe, keyboard, light/dark theme, and English/Bahasa Melayu.
 
 ## Stack and boundaries
 
 - Next.js App Router, TypeScript, Tailwind CSS 4, and local shadcn/ui components.
-- Three.js is used only for the tower builder.
+- Three.js is used only for the Play block builder (`app/tower-builder.tsx`).
 - Use npm and the standard Next.js commands in `package.json`.
 - Keep the site frontend-only. Do not add a backend, authentication, visitor data, services, or persistence without approval.
 - Keep the portrait and employer marks replaceable. Do not invent contact URLs or a recipient email.
@@ -20,7 +20,7 @@ A personal portfolio presented as a mock browser. It has an ID-card intro with c
 - Use `PortfolioCard` for portfolio surfaces and local shadcn/ui primitives for controls. Add a shadcn component only when the UI needs it.
 - Keep mock-browser and artwork layout rules in `app/globals.css`; use shared tokens for card surfaces.
 - Avoid eyebrow/overline labels across portfolio screens. Start sections with their title; show category metadata after the title in normal casing.
-- The intro contact dialog exposes the supplied LinkedIn profile and email. If visitors need a phone number, direct them to LinkedIn; do not display or collect the phone number. Do not add a GitHub or résumé link without the owner's consent.
+- The intro contact dialog exposes the supplied LinkedIn profile and email. If visitors need a phone number, direct them to LinkedIn; do not display or collect the phone number. The intro also links the owner-supplied résumé PDF at `public/resume/yon-yusuff-resume.pdf`; replace that file to update it. Do not add a GitHub link without the owner's consent.
 - Avoid hosting-provider configuration in the app. Keep deployment setup outside the product code.
 
 ## Verification
