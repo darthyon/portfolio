@@ -260,7 +260,8 @@ button { color: inherit; }
 .builder-main { min-width: 0; min-height: 0; gap: 0; overflow: hidden; padding: 0; border-radius: 19px; }
 .builder-canvas { position: relative; min-height: 160px; height: clamp(180px, 39dvh, 390px); overflow: hidden; touch-action: none; background: #eaf0f8; cursor: grab; }
 .builder-canvas:active { cursor: grabbing; }
-.builder-canvas canvas { display: block; width: 100%; height: 100%; }
+.builder-renderer { position: absolute; inset: 0; }
+.builder-renderer canvas { display: block; width: 100%; height: 100%; }
 .canvas-loading { position: absolute; top: 50%; left: 50%; z-index: 2; transform: translate(-50%, -50%); color: #6f809b; font-size: 13px; }
 .tower-fallback { position: absolute; z-index: 1; inset: 35px 0 20px; display: flex; align-items: flex-end; justify-content: center; gap: 49px; padding-bottom: 20px; }
 .fallback-tower { position: relative; display: flex; width: 67px; min-height: 10px; flex-direction: column-reverse; gap: 2px; border-bottom: 2px solid #91a7c3; }
