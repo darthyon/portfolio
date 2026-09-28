@@ -92,7 +92,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
           className="pointer-events-none absolute inset-x-0 top-[20%] z-20 h-[95%] transform-gpu will-change-[transform]"
           variants={{
             initial: { y: 0 },
-            hover: { y: "26%" },
+            hover: { y: "16%" },
           }}
           transition={transition}
         >

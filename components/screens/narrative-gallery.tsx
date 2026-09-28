@@ -10,22 +10,24 @@ import type { SectionCopy } from "./copy";
 interface NarrativeGalleryProps {
   screens: readonly [CaseStudyScreenshot, ...CaseStudyScreenshot[]];
   copy: SectionCopy;
+  layout?: "portrait" | "wide";
 }
 
-export function NarrativeGallery({ screens, copy }: NarrativeGalleryProps) {
+export function NarrativeGallery({ screens, copy, layout = "portrait" }: NarrativeGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeScreen = screens[activeIndex] ?? screens[0];
+  const hasMultipleScreens = screens.length > 1;
 
   function move(direction: -1 | 1) {
     setActiveIndex((index) => (index + direction + screens.length) % screens.length);
   }
 
   return (
-    <div className="narrative-gallery" role="group" aria-label={copy.caseStudyGalleryLabel}>
+    <div className={`narrative-gallery${layout === "wide" ? " narrative-gallery--wide" : ""}${hasMultipleScreens ? "" : " narrative-gallery--single"}`} role="group" aria-label={copy.caseStudyGalleryLabel}>
       <div className="narrative-gallery-stage">
-        <Button type="button" variant="default" size="icon" className="narrative-gallery-arrow" onClick={() => move(-1)} aria-label={copy.caseStudyPreviousScreenshot}>
+        {hasMultipleScreens && <Button type="button" variant="default" size="icon" className="narrative-gallery-arrow" onClick={() => move(-1)} aria-label={copy.caseStudyPreviousScreenshot}>
           <ChevronLeft aria-hidden="true" color="#fff" />
-        </Button>
+        </Button>}
         <a
           className="narrative-gallery-link"
           href={activeScreen.src}
@@ -33,17 +35,17 @@ export function NarrativeGallery({ screens, copy }: NarrativeGalleryProps) {
           rel="noopener noreferrer"
           aria-label={`${copy.caseStudyOpenScreenshot}: ${activeScreen.label}`}
         >
-          <Image src={activeScreen.src} alt={activeScreen.alt} width={activeScreen.width} height={activeScreen.height} sizes="166px" unoptimized />
+          <Image src={activeScreen.src} alt={activeScreen.alt} width={activeScreen.width} height={activeScreen.height} sizes={layout === "wide" ? "(max-width: 760px) 65vw, 720px" : "166px"} unoptimized />
         </a>
-        <Button type="button" variant="default" size="icon" className="narrative-gallery-arrow" onClick={() => move(1)} aria-label={copy.caseStudyNextScreenshot}>
+        {hasMultipleScreens && <Button type="button" variant="default" size="icon" className="narrative-gallery-arrow" onClick={() => move(1)} aria-label={copy.caseStudyNextScreenshot}>
           <ChevronRight aria-hidden="true" color="#fff" />
-        </Button>
+        </Button>}
       </div>
       <div className="narrative-gallery-position" aria-live="polite">
         <strong>{activeScreen.label}</strong>
-        <span>{activeIndex + 1} / {screens.length}</span>
+        {hasMultipleScreens && <span>{activeIndex + 1} / {screens.length}</span>}
       </div>
-      <div className="narrative-gallery-selectors" role="group" aria-label={copy.caseStudyGalleryScreens}>
+      {hasMultipleScreens && <div className="narrative-gallery-selectors" role="group" aria-label={copy.caseStudyGalleryScreens}>
         {screens.map((screen, index) => (
           <Button
             key={screen.src}
@@ -57,7 +59,7 @@ export function NarrativeGallery({ screens, copy }: NarrativeGalleryProps) {
             {screen.label}
           </Button>
         ))}
-      </div>
+      </div>}
     </div>
   );
 }
