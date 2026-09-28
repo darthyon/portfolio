@@ -1,20 +1,20 @@
 # Handoff
 
 ## State
-- Current branch: `codex/projects-card-folder-flow` at `7a1425b`, pushed to `origin` from `origin/main`.
-- The Explore screen now has six monochrome CardFolder entries: three case studies, two side projects, and About.
-- Project folders open case studies directly; the other folders open full-screen detail pages with a back path.
-- Stack: Next.js App Router, TypeScript, Tailwind CSS 4, local shadcn/ui; Three.js only for the tower builder.
-- Keep the site frontend-only; do not add persistence, visitor data, or invented project/contact details.
+- Branch: `codex/projects-card-folder-flow`; Explore has six monochrome folders, three of them opening project case studies.
+- Case studies now have a compact hero and a scrollable seven-part structure: situation, insights, decisions, system artifact, result, and contact CTA.
+- Existing project summaries remain. Role/year/scope, evidence, insights, decisions, and outcomes are visibly marked for the owner to supply; no project claims were invented.
+- Wheel, touch, and keyboard navigation inside the case study scroll region are exempt from global screen switching.
+- The project roster discussion is pending: WellUber, MyLorry platform, MyLorry Driver, CounselAI, Mindline or TF, and Sentient. Current folders were not replaced yet.
 
 ## Next
-- Manually review folder hover/open, back navigation, focus return, and fit on desktop, mobile, and short viewports.
-- Confirm the project and side-quest copy; replace portrait and employer assets when supplied.
-- Open the PR from `codex/projects-card-folder-flow` to `main` once GitHub CLI authentication works; branch URL: `https://github.com/darthyon/portfolio/pull/new/codex/projects-card-folder-flow`.
+- Owner reviews the layout in the browser and supplies real copy, screenshots, and one system artifact per case study.
+- Decide Mindline vs TF and Sentient's distinct capability before replacing the current six folders.
+- Manually check case study scroll and return path on desktop/mobile, keyboard, both themes, and both languages.
+- Open PR to `main` when GitHub CLI authentication works: https://github.com/darthyon/portfolio/pull/new/codex/projects-card-folder-flow
 
 ## Blockers-decisions
-- `npm run build` could not fetch IBM Plex Sans from Google Fonts; retry when the build environment can reach `fonts.googleapis.com`.
-- TypeScript and lint passed. No tests or browser preview were run per project policy.
-- `gh auth status` reports invalid tokens for both `yon-tug` and `darthyon`; Git's repository credential helper still pushed the branch successfully.
-- `origin` is `https://github.com/darthyon/portfolio.git`; this private repository uses its local GitHub credential helper. Do not change the global `gh` account.
-- SSH access uses `github-darthyon` / `github-yon-tug` aliases; plain `git@github.com` is not configured.
+- useLayouts Accessible Action page and registry source could not be fetched here; the optional CTA uses the supplied LinkedIn URL instead.
+- `npx tsc --noEmit` and `npm run lint` passed on the case study layout. No tests or browser preview were run per project policy.
+- Earlier `npm run build` could not fetch IBM Plex Sans from Google Fonts; retry with network access.
+- `gh auth status` previously reported invalid tokens for both configured accounts; Git push via the repository credential helper works.

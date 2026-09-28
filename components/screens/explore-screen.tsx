@@ -9,6 +9,7 @@ import { PortfolioInfoCard } from "@/components/portfolio-info-card";
 import {
   aboutNotes,
   folders,
+  linkedinUrl,
   projects,
   sideQuests,
   type FolderContent,
@@ -215,18 +216,50 @@ function ProjectCaseStudy({
         <ArrowLeft size={17} />
         {copy.caseStudyBack}
       </Button>
-      <div className="case-study-layout">
-        <div className="case-study-copy">
-          <h2 id="case-study-title">{project.title}</h2>
-          <p className="case-study-summary">{summary}</p>
-          <p className="project-meta case-study-category">{category}</p>
-          <div className="case-study-tags">
-            {project.previewItems.map((item) => <span key={item}>{item}</span>)}
+      <div className="case-study-scroll" data-case-study-scroll role="region" tabIndex={0} aria-label={`${project.title} ${copy.caseStudy}`}>
+        <div className="case-study-layout">
+          <div className="case-study-copy">
+            <h2 id="case-study-title">{project.title}</h2>
+            <p className="case-study-summary">{summary}</p>
+            <p className="project-meta case-study-category">{category}</p>
+            <dl className="case-study-facts">
+              <div><dt>{copy.caseStudyRole}</dt><dd>{copy.caseStudyPending}</dd></div>
+              <div><dt>{copy.caseStudyYear}</dt><dd>{copy.caseStudyPending}</dd></div>
+              <div><dt>{copy.caseStudyScope}</dt><dd>{copy.caseStudyPending}</dd></div>
+            </dl>
           </div>
+          <PortfolioCard role="img" elevation="subtle" className="case-study-artwork" aria-label={`${project.title} ${copy.caseStudyConceptPreview}`}>
+            <ProjectPreview project={project} />
+            <span className="case-study-visual-caption">{copy.caseStudyConceptPreview}</span>
+          </PortfolioCard>
         </div>
-        <PortfolioCard role="img" elevation="subtle" className="case-study-artwork" aria-label={`${project.title} interface preview`}>
-          <ProjectPreview project={project} />
-        </PortfolioCard>
+
+        <div className="case-study-story">
+          <section className="case-study-section" aria-labelledby="case-situation">
+            <span className="case-study-step">01</span>
+            <div><h3 id="case-situation">{copy.caseStudySituation}</h3><p className="case-study-pending">{copy.caseStudySituationPending}</p></div>
+          </section>
+          <section className="case-study-section" aria-labelledby="case-insights">
+            <span className="case-study-step">02</span>
+            <div><h3 id="case-insights">{copy.caseStudyInsights}</h3><ol className="case-study-list">{[1, 2, 3].map((number) => <li key={number}><span>0{number}</span>{copy.caseStudyInsightPending}</li>)}</ol></div>
+          </section>
+          <section className="case-study-section" aria-labelledby="case-decisions">
+            <span className="case-study-step">03</span>
+            <div><h3 id="case-decisions">{copy.caseStudyDecisions}</h3><div className="case-study-decision-grid">{[1, 2, 3].map((number) => <article key={number}><div className="case-study-evidence">{copy.caseStudyVisualPending}</div><h4>{copy.caseStudyDecisionPending} 0{number}</h4><p>{copy.caseStudyExplanationPending}</p></article>)}</div></div>
+          </section>
+          <section className="case-study-section" aria-labelledby="case-system">
+            <span className="case-study-step">04</span>
+            <div><h3 id="case-system">{copy.caseStudySystem}</h3><div className="case-study-system-slot">{copy.caseStudyArtifactPending}</div></div>
+          </section>
+          <section className="case-study-section" aria-labelledby="case-result">
+            <span className="case-study-step">05</span>
+            <div><h3 id="case-result">{copy.caseStudyResult}</h3><p className="case-study-pending">{copy.caseStudyResultPending}</p></div>
+          </section>
+          <section className="case-study-cta" aria-label={copy.caseStudyContactLabel}>
+            <h3>{copy.caseStudyContactTitle}</h3>
+            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">{copy.caseStudyContactAction} <ArrowRight size={18} /></a>
+          </section>
+        </div>
       </div>
     </div>
   );

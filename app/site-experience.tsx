@@ -54,6 +54,7 @@ export function SiteExperience() {
     function handleWheel(event: WheelEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
       if (target?.closest("dialog[open]")) return;
+      if (target?.closest("[data-case-study-scroll]")) return;
       if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
       event.preventDefault();
       if (Math.abs(event.deltaY) < 24 || Date.now() - lastWheelNavigation.current < 760) return;
@@ -69,7 +70,7 @@ export function SiteExperience() {
     function handleTouchEnd(event: TouchEvent) {
       if (touchStartY === null) return;
       const target = touchTarget instanceof HTMLElement ? touchTarget : null;
-      if (target?.closest("dialog[open], input, textarea, select, .builder-canvas, [contenteditable='true']")) {
+      if (target?.closest("dialog[open], input, textarea, select, .builder-canvas, [data-case-study-scroll], [contenteditable='true']")) {
         touchStartY = null;
         touchTarget = null;
         return;
@@ -87,6 +88,7 @@ export function SiteExperience() {
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
       if (target?.closest("dialog[open]")) return;
+      if (target?.closest("[data-case-study-scroll]")) return;
       if (target?.closest("input, textarea, select, button, a, [contenteditable='true']")) return;
       if (event.key === "PageDown" || event.key === "ArrowDown" || event.key === " ") {
         event.preventDefault();
