@@ -14,7 +14,7 @@ export const sectionCopy = {
   en: {
     current: "Bought a new Smiski",
     exploreTitle: "A few things I’ve designed and built.",
-    backFolders: "All folders",
+    backFolders: "Back to folders",
     caseStudy: "Case study",
     caseStudyBack: "Back to projects",
     openFolder: "Open folder",
@@ -33,7 +33,7 @@ export const sectionCopy = {
   bm: {
     current: "Beli Smiski baharu",
     exploreTitle: "Beberapa perkara yang saya reka dan bina.",
-    backFolders: "Semua folder",
+    backFolders: "Kembali ke folder",
     caseStudy: "Kajian kes",
     caseStudyBack: "Kembali ke projek",
     openFolder: "Buka folder",
@@ -54,8 +54,11 @@ export const sectionCopy = {
 export type SectionCopy = (typeof sectionCopy)[Language];
 
 const bmFolders: Record<FolderId, Pick<FolderContent, "name" | "description">> = {
-  work: { name: "Kerja Terpilih", description: "Beberapa perkara yang saya reka dan bina." },
-  "side-quests": { name: "Projek Sampingan", description: "Eksperimen, alat dan idea yang sedang diteroka." },
+  mysubsidi: { name: "MySubsidi", description: "Penjejak subsidi kerajaan untuk rakyat Malaysia." },
+  welluber: { name: "WellUber", description: "Pengangkutan penjagaan kesihatan atas permintaan." },
+  mylorry: { name: "MyLorry", description: "Platform logistik yang menghubungkan perniagaan dan pemandu lori." },
+  "little-tools": { name: "Alat kecil", description: "Utiliti ringkas untuk mengurangkan kesukaran harian." },
+  "interaction-studies": { name: "Kajian interaksi", description: "Gerakan dan butiran antara muka yang diteroka dalam kod." },
   about: { name: "Tentang Saya", description: "Sedikit tentang cara saya bekerja dan perkara yang saya hargai." },
 };
 

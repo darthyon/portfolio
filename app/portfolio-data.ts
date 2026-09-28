@@ -1,7 +1,9 @@
-export type FolderId = "work" | "side-quests" | "about";
+export type PortfolioProjectId = "mysubsidi" | "welluber" | "mylorry";
+export type FolderId = PortfolioProjectId | "little-tools" | "interaction-studies" | "about";
+export type FolderContentKind = "project" | "side-quest" | "about";
 
 export interface PortfolioProject {
-  id: string;
+  id: PortfolioProjectId;
   title: string;
   summary: string;
   category: string;
@@ -12,9 +14,17 @@ export interface PortfolioProject {
 
 export interface FolderContent {
   id: FolderId;
+  kind: FolderContentKind;
   name: string;
   description: string;
-  color: "blue" | "yellow" | "slate";
+}
+
+export interface PortfolioSideQuest {
+  id: "little-tools" | "interaction-studies";
+  title: string;
+  summary: string;
+  category: string;
+  icon: string;
 }
 
 export type ContactChannelKind = "email" | "linkedin";
@@ -40,27 +50,6 @@ export const contactChannels: readonly ContactChannel[] = [
     label: "Email",
     value: "yooneggy8@gmail.com",
     href: "mailto:yooneggy8@gmail.com",
-  },
-];
-
-export const folders: readonly FolderContent[] = [
-  {
-    id: "work",
-    name: "Selected Work",
-    description: "A few things I’ve designed and built.",
-    color: "blue",
-  },
-  {
-    id: "side-quests",
-    name: "Side Quests",
-    description: "Experiments, tools, and ideas in progress.",
-    color: "yellow",
-  },
-  {
-    id: "about",
-    name: "About",
-    description: "A little about how I work and what matters to me.",
-    color: "slate",
   },
 ];
 
@@ -94,14 +83,16 @@ export const projects: readonly PortfolioProject[] = [
   },
 ];
 
-export const sideQuests = [
+export const sideQuests: readonly PortfolioSideQuest[] = [
   {
+    id: "little-tools",
     title: "Little tools",
     summary: "Small utilities made to remove everyday friction.",
     category: "Build in progress",
     icon: "✳",
   },
   {
+    id: "interaction-studies",
     title: "Interaction studies",
     summary: "Motion and interface details explored in code.",
     category: "Design experiments",
@@ -123,6 +114,27 @@ export const aboutNotes = [
     icon: "02",
   },
 ] as const;
+
+export const folders: readonly FolderContent[] = [
+  ...projects.map<FolderContent>((project) => ({
+    id: project.id,
+    kind: "project",
+    name: project.title,
+    description: project.summary,
+  })),
+  ...sideQuests.map<FolderContent>((item) => ({
+    id: item.id,
+    kind: "side-quest",
+    name: item.title,
+    description: item.summary,
+  })),
+  {
+    id: "about",
+    kind: "about",
+    name: "About",
+    description: "A little about how I work and what matters to me.",
+  },
+];
 
 export const profile = {
   name: "Yon Yusuff",

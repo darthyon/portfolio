@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  Folder,
-  FolderOpen,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardFolder, type FolderCardData } from "@/components/card-folder";
 import { PortfolioCard } from "@/components/portfolio-card";
 import { PortfolioInfoCard } from "@/components/portfolio-info-card";
 import {
@@ -15,21 +11,23 @@ import {
   folders,
   projects,
   sideQuests,
+  type FolderContent,
   type FolderId,
   type PortfolioProject,
+  type PortfolioProjectId,
 } from "@/app/portfolio-data";
 import { localizeFolder, type Language, type SectionCopy } from "./copy";
 
 interface ExploreScreenProps {
   active: boolean;
   activeFolder: FolderId | null;
-  caseStudyProjectId: string | null;
+  caseStudyProjectId: PortfolioProjectId | null;
   copy: SectionCopy;
   language: Language;
-  onCaseStudyBack: (projectId: string) => void;
+  onCaseStudyBack: (projectId: PortfolioProjectId) => void;
   onFolderClose: (folderId: FolderId) => void;
   onFolderSelect: (folderId: FolderId) => void;
-  onProjectSelect: (projectId: string) => void;
+  onProjectSelect: (projectId: PortfolioProjectId) => void;
 }
 
 function ProjectPreview({ project }: { project: PortfolioProject }) {
@@ -71,124 +69,125 @@ function localizeProject(project: PortfolioProject, language: Language): Pick<Po
   };
 }
 
-function FolderVisual({ isOpen }: { isOpen: boolean }) {
+function localizeSideQuest(item: (typeof sideQuests)[number], language: Language) {
+  if (language === "en") return item;
+  if (item.id === "little-tools") {
+    return {
+      ...item,
+      title: "Alat kecil",
+      summary: "Utiliti ringkas untuk mengurangkan kesukaran harian.",
+      category: "Sedang dibina",
+    };
+  }
+  return {
+    ...item,
+    title: "Kajian interaksi",
+    summary: "Gerakan dan butiran antara muka yang diteroka dalam kod.",
+    category: "Eksperimen reka bentuk",
+  };
+}
+
+function localizeAboutNote(item: (typeof aboutNotes)[number], language: Language) {
+  if (language === "en") return item;
+  if (item.title === "Product thinking") {
+    return {
+      ...item,
+      title: "Pemikiran produk",
+      summary: "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya.",
+      category: "Cara saya bekerja",
+    };
+  }
+  return {
+    ...item,
+    title: "Reka bentuk hingga siap",
+    summary: "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata.",
+    category: "Perkara yang saya hargai",
+  };
+}
+
+function FolderArtwork({ folder, language }: { folder: FolderContent; language: Language }) {
+  if (folder.kind === "project") {
+    const project = projects.find((item) => item.id === folder.id);
+    if (project) {
+      return (
+        <span className="card-folder-project-art" aria-hidden="true">
+          <ProjectPreview project={project} />
+        </span>
+      );
+    }
+  }
+
+  if (folder.kind === "side-quest") {
+    const item = sideQuests.find((quest) => quest.id === folder.id);
+    return <span className="card-folder-symbol-art" aria-hidden="true">{item?.icon}</span>;
+  }
+
   return (
-    <span className="folder-art" aria-hidden="true">
-      {isOpen ? <FolderOpen size={78} strokeWidth={1.3} /> : <Folder size={78} strokeWidth={1.3} />}
+    <span className="card-folder-notes-art" aria-hidden="true">
+      <span>{language === "en" ? "Working notes" : "Catatan kerja"}</span>
+      <span>01 <i /> 02</span>
     </span>
   );
 }
 
-function ProjectRowCard({
-  project,
-  language,
-  onSelect,
-}: {
-  project: PortfolioProject;
-  language: Language;
-  onSelect: () => void;
-}) {
-  const { summary, category } = localizeProject(project, language);
-
-  return (
-    <Button
-      variant="ghost"
-      className={`project-row ${project.color}`}
-      id={`project-card-${project.id}`}
-      onClick={onSelect}
-      aria-label={`${language === "en" ? "Open case study:" : "Buka kajian kes:"} ${project.title}`}
-    >
-      <ProjectPreview project={project} />
-      <span className="project-row-copy">
-        <strong>{project.title}</strong>
-        <span className="project-summary">{summary}</span>
-        <span className="project-meta">{category}</span>
-      </span>
-      <span className="project-arrow"><ArrowRight size={18} /></span>
-    </Button>
-  );
-}
-
-function WorkPanel({
-  folderId,
+function FolderSubpage({
+  folder,
   language,
   copy,
   onClose,
-  onProjectSelect,
 }: {
-  folderId: FolderId;
+  folder: FolderContent;
   language: Language;
   copy: SectionCopy;
   onClose: (folderId: FolderId) => void;
-  onProjectSelect: (projectId: string) => void;
 }) {
-  const selectedFolder = folders.find((item) => item.id === folderId) ?? folders[0];
-  const localizedFolder = localizeFolder(selectedFolder, language);
+  const localizedFolder = localizeFolder(folder, language);
 
   function handleClose() {
-    onClose(folderId);
-    window.requestAnimationFrame(() => document.getElementById(`folder-tab-${folderId}`)?.focus());
+    onClose(folder.id);
+    window.requestAnimationFrame(() => document.getElementById(`folder-card-${folder.id}`)?.focus());
   }
 
   return (
-    <PortfolioCard data-folder={folderId} className="work-panel" role="complementary" aria-label={`${localizedFolder.name} panel`}>
-      <CardHeader className="panel-heading">
-        <div className="panel-title-wrap">
-          <FolderOpen className="panel-folder-icon" size={30} strokeWidth={1.8} />
-          <div>
-            <CardTitle><h3>{localizedFolder.name}</h3></CardTitle>
-            <CardDescription><p>{localizedFolder.description}</p></CardDescription>
-          </div>
-        </div>
-        <Button variant="ghost" size="icon" className="icon-button close-panel" onClick={handleClose} aria-label={copy.backFolders}>
-          <ArrowLeft size={19} />
-        </Button>
-      </CardHeader>
-
-      <CardContent className="panel-body">
-        {folderId === "work" && (
-          <div className="project-list">
-            {projects.map((project) => (
-              <ProjectRowCard
-                key={project.id}
-                project={project}
-                language={language}
-                onSelect={() => onProjectSelect(project.id)}
-              />
-            ))}
-          </div>
-        )}
-
-        {folderId === "side-quests" && (
-          <div className="simple-list">
-            {sideQuests.map((item) => (
+    <div className="folder-subpage">
+      <Button variant="ghost" className="folder-subpage-back" onClick={handleClose}>
+        <ArrowLeft size={17} />
+        {copy.backFolders}
+      </Button>
+      <PortfolioCard className="folder-subpage-card" aria-label={`${localizedFolder.name} folder`}>
+        <CardHeader className="folder-subpage-heading">
+          <CardTitle><h2>{localizedFolder.name}</h2></CardTitle>
+          <CardDescription><p>{localizedFolder.description}</p></CardDescription>
+        </CardHeader>
+        <CardContent className={`folder-subpage-body ${folder.kind === "about" ? "is-about" : ""}`}>
+          {folder.kind === "side-quest" && sideQuests.filter((item) => item.id === folder.id).map((item) => {
+            const localizedItem = localizeSideQuest(item, language);
+            return (
               <PortfolioInfoCard
-                key={item.title}
+                key={item.id}
                 icon={item.icon}
-                category={language === "en" ? item.category : "Eksperimen reka bentuk"}
-                title={language === "en" ? item.title : item.title === "Little tools" ? "Alat kecil" : "Kajian interaksi"}
-                summary={language === "en" ? item.summary : item.title === "Little tools" ? "Utiliti ringkas untuk mengurangkan kesukaran harian." : "Gerakan dan butiran antara muka yang diteroka dalam kod."}
+                category={localizedItem.category}
+                title={localizedItem.title}
+                summary={localizedItem.summary}
               />
-            ))}
-          </div>
-        )}
-
-        {folderId === "about" && (
-          <div className="simple-list">
-            {aboutNotes.map((item) => (
+            );
+          })}
+          {folder.kind === "about" && aboutNotes.map((item) => {
+            const localizedItem = localizeAboutNote(item, language);
+            return (
               <PortfolioInfoCard
                 key={item.title}
                 icon={item.icon}
                 iconStyle="note"
-                category={language === "en" ? item.category : item.category === "How I work" ? "Cara saya bekerja" : "Perkara yang saya hargai"}
-                title={language === "en" ? item.title : item.title === "Product thinking" ? "Pemikiran produk" : "Reka bentuk hingga siap"}
-                summary={language === "en" ? item.summary : item.title === "Product thinking" ? "Mulakan dengan masalah, dengar dengan teliti, kemudian jelaskan langkah seterusnya." : "Saya suka membentuk idea dan bekerjasama untuk menjadikannya nyata."}
+                category={localizedItem.category}
+                title={localizedItem.title}
+                summary={localizedItem.summary}
               />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </PortfolioCard>
+            );
+          })}
+        </CardContent>
+      </PortfolioCard>
+    </div>
   );
 }
 
@@ -201,13 +200,13 @@ function ProjectCaseStudy({
   project: PortfolioProject;
   language: Language;
   copy: SectionCopy;
-  onBack: (projectId: string) => void;
+  onBack: (projectId: PortfolioProjectId) => void;
 }) {
   const { summary, category } = localizeProject(project, language);
 
   function handleBack() {
     onBack(project.id);
-    window.requestAnimationFrame(() => document.getElementById(`project-card-${project.id}`)?.focus());
+    window.requestAnimationFrame(() => document.getElementById(`folder-card-${project.id}`)?.focus());
   }
 
   return (
@@ -244,15 +243,14 @@ export function ExploreScreen({
   onFolderSelect,
   onProjectSelect,
 }: ExploreScreenProps) {
-  const activeFolderData = activeFolder ? folders.find((folder) => folder.id === activeFolder) ?? folders[0] : null;
-  const localizedActiveFolder = activeFolderData ? localizeFolder(activeFolderData, language) : null;
+  const activeFolderData = activeFolder ? folders.find((folder) => folder.id === activeFolder) ?? null : null;
   const activeCaseStudyProject = projects.find((project) => project.id === caseStudyProjectId) ?? null;
 
   return (
     <section
       className="screen explore-screen"
       id="explore"
-      aria-label={activeCaseStudyProject ? `${copy.caseStudy}: ${activeCaseStudyProject.title}` : copy.exploreTitle}
+      aria-label={activeCaseStudyProject ? `${copy.caseStudy}: ${activeCaseStudyProject.title}` : activeFolderData ? `${localizeFolder(activeFolderData, language).name} folder` : copy.exploreTitle}
       data-active={active}
       aria-hidden={!active}
       inert={!active}
@@ -264,51 +262,52 @@ export function ExploreScreen({
           copy={copy}
           onBack={onCaseStudyBack}
         />
+      ) : activeFolderData ? (
+        <FolderSubpage
+          folder={activeFolderData}
+          language={language}
+          copy={copy}
+          onClose={onFolderClose}
+        />
       ) : (
         <>
           <div className="section-heading explore-heading">
             <h2 id="explore-title">{copy.exploreTitle}</h2>
           </div>
-          <div className={`explore-workspace ${activeFolder ? "folder-active" : ""}`}>
-            {activeFolder ? (
-              <div className={`folder-context ${activeFolderData?.color ?? "blue"}`}>
-                <FolderVisual isOpen />
-                <strong>{localizedActiveFolder?.name}</strong>
-                <span className="folder-description">{localizedActiveFolder?.description}</span>
-              </div>
-            ) : (
-              <div className="folder-grid" role="group" aria-label="Portfolio folders">
-                {folders.map((folder, index) => {
-                  const localizedFolder = localizeFolder(folder, language);
-                  return (
-                    <Button
-                      variant="ghost"
-                      className={`folder-card ${folder.color}`}
-                      key={folder.id}
-                      id={`folder-tab-${folder.id}`}
-                      onClick={() => onFolderSelect(folder.id)}
-                      aria-label={`${copy.openFolder}: ${localizedFolder.name}`}
-                    >
-                      <FolderVisual isOpen={false} />
-                      <strong>{localizedFolder.name}</strong>
-                      <span className="folder-description">{localizedFolder.description}</span>
-                      <span className="folder-number">0{index + 1}</span>
-                    </Button>
-                  );
-                })}
-              </div>
-            )}
-            {activeFolder && (
-              <div id="folder-panel" className="folder-panel-wrap">
-                <WorkPanel
-                  folderId={activeFolder}
-                  language={language}
-                  copy={copy}
-                  onClose={onFolderClose}
-                  onProjectSelect={onProjectSelect}
+          <div className="folder-grid" role="group" aria-label={language === "en" ? "Portfolio folders" : "Folder portfolio"}>
+            {folders.map((folder, index) => {
+              const localizedFolder = localizeFolder(folder, language);
+              const card: FolderCardData = {
+                number: String(index + 1).padStart(2, "0"),
+                title: localizedFolder.name,
+                description: localizedFolder.description,
+                backgroundColor: "var(--folder-card-back)",
+                folderColor: "var(--folder-card-front)",
+                borderColor: "var(--folder-card-edge)",
+                textColor: "var(--folder-card-ink)",
+                subTextColor: "var(--folder-card-muted)",
+                artwork: <FolderArtwork folder={folder} language={language} />,
+              };
+
+              return (
+                <CardFolder
+                  key={folder.id}
+                  id={`folder-card-${folder.id}`}
+                  className="portfolio-folder-card"
+                  card={card}
+                  isOpen={activeFolder === folder.id || caseStudyProjectId === folder.id}
+                  ariaLabel={`${copy.openFolder}: ${localizedFolder.name}`}
+                  onSelect={() => {
+                    if (folder.kind === "project") {
+                      const project = projects.find((item) => item.id === folder.id);
+                      if (project) onProjectSelect(project.id);
+                      return;
+                    }
+                    onFolderSelect(folder.id);
+                  }}
                 />
-              </div>
-            )}
+              );
+            })}
           </div>
         </>
       )}
