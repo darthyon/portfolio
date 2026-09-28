@@ -6,7 +6,6 @@
 
 @theme inline {
   --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-syne), sans-serif;
   --color-background: var(--surface);
   --color-foreground: var(--ink);
   --color-card: var(--surface);
@@ -84,7 +83,6 @@ body {
   -webkit-font-smoothing: antialiased;
   transition: background-color 240ms ease, color 240ms ease;
 }
-h1, h2, h3, h4 { font-family: var(--font-syne), sans-serif; }
 button, input, textarea { font: inherit; }
 button { color: inherit; }
 ::selection { background: #cbd8f0; color: #172444; }
