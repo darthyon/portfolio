@@ -20,7 +20,7 @@ A personal portfolio presented as a mock browser. It has an ID-card intro with c
 - Use `PortfolioCard` for portfolio surfaces and local shadcn/ui primitives for controls. Add a shadcn component only when the UI needs it.
 - Keep mock-browser and artwork layout rules in `app/globals.css`; use shared tokens for card surfaces.
 - Avoid eyebrow/overline labels across portfolio screens. Start sections with their title; show category metadata after the title in normal casing.
-- The intro contact dialog exposes the supplied LinkedIn profile and email. If visitors need a phone number, direct them to LinkedIn; do not display or collect the phone number. Do not add a GitHub or résumé link without the owner's consent.
+- The intro contact dialog exposes the supplied LinkedIn profile and email. If visitors need a phone number, direct them to LinkedIn; do not display or collect the phone number. The intro also links the owner-supplied résumé PDF at `public/resume/yon-yusuff-resume.pdf`; replace that file to update it. Do not add a GitHub link without the owner's consent.
 - Avoid hosting-provider configuration in the app. Keep deployment setup outside the product code.
 
 ## Verification

@@ -94,6 +94,7 @@ export interface ContactChannel {
 }
 
 export const linkedinUrl = "https://www.linkedin.com/in/yon-yusuff/";
+export const resumeUrl = "/resume/yon-yusuff-resume.pdf";
 
 export const contactChannels: readonly ContactChannel[] = [
   {

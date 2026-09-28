@@ -170,13 +170,15 @@ button { color: inherit; }
 .availability-dot { width: 9px; height: 9px; border-radius: 50%; background: #24c678; box-shadow: 0 0 0 3px rgb(36 198 120 / 14%); }
 .card-content h1 { margin: 0; color: var(--ink); font-size: clamp(48px, 5vw, 56px); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
 .profile-role { margin: 8px 0 0; color: var(--muted); font-size: 22px; letter-spacing: -.035em; }
-.card-work-summary { display: flex; flex-direction: column; gap: 3px; margin: 20px auto 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
-.card-work-summary [data-slot="separator"] { margin-bottom: 14px; background: var(--line); }
+.card-work-summary { display: flex; flex-direction: column; gap: 3px; margin: 28px auto 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
 .card-work-summary p { margin: 0; }
-.intro-contact-actions { display: flex; width: 100%; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; margin: 16px auto 0; padding-top: 12px; border-top: 1px solid var(--line); }
-.intro-add-contact { display: inline-flex; width: min(100%, 220px); min-height: 48px; align-items: center; justify-content: center; gap: 7px; padding: 0 15px; border: 0; border-radius: 11px; background: var(--primary-action); color: var(--primary-foreground); font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 14px rgb(37 99 235 / 25%); transition: background-color 160ms ease, transform 160ms ease; }
+.intro-contact-actions { display: flex; width: 100%; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 8px; margin: 28px auto 0; }
+.intro-add-contact { display: inline-flex; flex: 1 1 0; min-width: 0; max-width: 220px; min-height: 48px; align-items: center; justify-content: center; gap: 7px; padding: 0 15px; border: 0; border-radius: 11px; background: var(--primary-action); color: var(--primary-foreground); font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 6px 14px rgb(37 99 235 / 25%); transition: background-color 160ms ease, transform 160ms ease; }
 .intro-add-contact:hover { transform: translateY(-1px); background: var(--primary-action-hover); }
 .intro-add-contact:focus-visible { outline: 2px solid var(--primary-action); outline-offset: 2px; }
+.intro-view-resume { display: inline-flex; flex: 1 1 0; min-width: 0; max-width: 220px; min-height: 48px; align-items: center; justify-content: center; gap: 7px; padding: 0 15px; border: 1.5px solid #3f3f46; border-radius: 11px; background: transparent; color: #3f3f46; font-size: 12px; font-weight: 700; text-decoration: none; box-shadow: none; transition: background-color 160ms ease, transform 160ms ease; }
+.intro-view-resume:hover { transform: translateY(-1px); background: rgb(63 63 70 / 8%); color: #3f3f46; }
+.intro-view-resume:focus-visible { outline: 2px solid var(--primary-action); outline-offset: 2px; }
 .employer-mention { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 600; white-space: nowrap; vertical-align: middle; }
 .employer-mark { display: block; width: 24px; height: 24px; flex: 0 0 auto; overflow: hidden; border: 1px solid color-mix(in srgb, var(--line-strong) 78%, white); border-radius: 7px; background: var(--surface); box-shadow: 0 3px 8px rgb(38 59 99 / 9%), inset 0 1px 0 rgb(255 255 255 / 78%); }
 .employer-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -462,6 +464,8 @@ button { color: inherit; }
 :root[data-theme="dark"] .reference-tower i { background: #898989; }
 :root[data-theme="dark"] .reference-bridge { border-color: #898989; background: #b0b0b0; }
 :root[data-theme="dark"] .reference-ground { background: #707070; }
+:root[data-theme="dark"] .intro-view-resume { border-color: #a1a1aa; color: #d4d4d8; }
+:root[data-theme="dark"] .intro-view-resume:hover { background: rgb(161 161 170 / 12%); color: #d4d4d8; }
 :root[data-theme="dark"] .reference-coordinate { color: #b8b8b8; }
 :root[data-theme="dark"] .fallback-tower { border-color: #898989; }
 :root[data-theme="dark"] .fallback-tower i { border-color: #898989; background: linear-gradient(90deg, #555555, #b0b0b0 40%, #707070); }
@@ -494,16 +498,15 @@ button { color: inherit; }
   .availability-badge { top: -48px; min-height: 34px; font-size: 11px; }
   .card-content h1 { font-size: clamp(34px, 8vw, 44px); }
   .profile-role { font-size: 16px; }
-  .card-work-summary { margin-top: 15px; font-size: 11px; }
+  .card-work-summary { margin-top: 20px; font-size: 11px; }
   .employer-mention { gap: 4px; }
-  .intro-contact-actions { gap: 6px; margin-top: 12px; padding-top: 10px; }
-  .intro-add-contact { padding: 0 12px; font-size: 11px; }
+  .intro-contact-actions { gap: 6px; margin-top: 20px; }
+  .intro-add-contact, .intro-view-resume { padding: 0 12px; font-size: 11px; }
   .contact-dialog { width: calc(100vw - 24px); border-radius: 20px; }
   .contact-dialog-surface { padding: 19px; }
   .contact-dialog-heading h2 { font-size: 24px; }
   .contact-method-list { margin-top: 18px; }
   .employer-mark { width: 21px; height: 21px; border-radius: 6px; }
-  .card-work-summary [data-slot="separator"] { margin-bottom: 10px; }
   .explore-screen, .play-screen { align-items: stretch; min-height: 0; gap: 13px; padding-right: 12px; padding-left: 12px; }
   .section-heading h2 { font-size: clamp(34px, 8vw, 49px); }
   .explore-heading h2 { font-size: clamp(26px, 6vw, 34px); }
@@ -617,8 +620,7 @@ button { color: inherit; }
   .id-card { padding-top: 30px; }
   .portrait-stage { height: clamp(120px, 25dvh, 205px); }
   .card-content { padding-top: 26px; padding-bottom: 10px; }
-  .card-work-summary { margin-top: 10px; }
-  .card-work-summary [data-slot="separator"] { margin-bottom: 6px; }
+  .card-work-summary { margin-top: 14px; }
   .explore-screen, .play-screen { gap: 8px; }
   .section-heading h2 { font-size: clamp(28px, 4vw, 44px); }
   .explore-heading h2 { font-size: clamp(26px, 3vw, 38px); }
@@ -638,7 +640,7 @@ button { color: inherit; }
   .reference-tower { height: 38px; }
   .reference-bridge { bottom: 34px; }
   .reference-copy p { font-size: 8px; }
-  .intro-contact-actions { gap: 5px; margin-top: 9px; padding-top: 8px; }
+  .intro-contact-actions { gap: 5px; margin-top: 14px; }
   .screen-switcher { height: 50px; }
   .screen-switch { min-height: 40px; }
 }
