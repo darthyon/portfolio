@@ -14,7 +14,7 @@ import { ExploreScreen } from "@/components/screens/explore-screen";
 import { IntroScreen } from "@/components/screens/intro-screen";
 import { PlayScreen } from "@/components/screens/play-screen";
 import { screenCopy, screens, sectionCopy, type Language, type ScreenId } from "@/components/screens/copy";
-import { type FolderId, type PortfolioProjectId } from "./portfolio-data";
+import { type PortfolioProjectId } from "./portfolio-data";
 
 const screenIndex = (screen: ScreenId) => screens.indexOf(screen);
 
@@ -22,7 +22,6 @@ export function SiteExperience() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>("intro");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState<Language>("en");
-  const [activeFolder, setActiveFolder] = useState<FolderId | null>(null);
   const [caseStudyProjectId, setCaseStudyProjectId] = useState<PortfolioProjectId | null>(null);
   const [builderStarted, setBuilderStarted] = useState(false);
   const lastWheelNavigation = useRef(0);
@@ -143,13 +142,10 @@ export function SiteExperience() {
       <IntroScreen active={activeScreen === "intro"} copy={copy} language={language} />
       <ExploreScreen
         active={activeScreen === "explore"}
-        activeFolder={activeFolder}
         caseStudyProjectId={caseStudyProjectId}
         copy={copy}
         language={language}
         onCaseStudyBack={() => setCaseStudyProjectId(null)}
-        onFolderClose={() => setActiveFolder(null)}
-        onFolderSelect={setActiveFolder}
         onProjectSelect={setCaseStudyProjectId}
       />
       <PlayScreen

@@ -1,20 +1,20 @@
 # Handoff
 
 ## State
-- Branch: `codex/projects-card-folder-flow`; Explore has six monochrome folders, three of them opening project case studies.
-- Case studies now have a compact hero and a scrollable seven-part structure: situation, insights, decisions, system artifact, result, and contact CTA.
-- Existing project summaries remain. Role/year/scope, evidence, insights, decisions, and outcomes are visibly marked for the owner to supply; no project claims were invented.
-- Wheel, touch, and keyboard navigation inside the case study scroll region are exempt from global screen switching.
-- The project roster discussion is pending: WellUber, MyLorry platform, MyLorry Driver, CounselAI, Mindline or TF, and Sentient. Current folders were not replaced yet.
+- Branch: `codex/projects-card-folder-flow`; Explore has six monochrome CardFolder entries opening a shared scrollable case study layout.
+- Project lineup: WellUber, MyLorry, MyLorry Driver, CounselAI, Mindline, Sentient. The previous MySubsidi, Little tools, Interaction studies, and About entries are removed from Explore.
+- Five case studies use the owner's supplied insights, changes, artifact framing, and before → after results, with concise English/Bahasa Melayu copy.
+- Sentient is framed as learning Web3 onboarding and wallet mechanics; its detailed story is pending. Role/year/scope and real visuals remain marked as pending for every project.
+- The hero uses an abstract labelled placeholder instead of a fabricated product screenshot. The CTA uses the owner's supplied LinkedIn URL.
+- Wheel, touch, and keyboard input inside a case study scroll region do not switch portfolio screens.
 
 ## Next
-- Owner reviews the layout in the browser and supplies real copy, screenshots, and one system artifact per case study.
-- Decide Mindline vs TF and Sentient's distinct capability before replacing the current six folders.
-- Manually check case study scroll and return path on desktop/mobile, keyboard, both themes, and both languages.
+- Owner reviews six folders, case study content, scroll/back path, mobile layout, both themes, and both languages.
+- Supply real project visuals, role/year/scope, system artifacts, and Sentient insights/decisions/result.
 - Open PR to `main` when GitHub CLI authentication works: https://github.com/darthyon/portfolio/pull/new/codex/projects-card-folder-flow
 
 ## Blockers-decisions
-- useLayouts Accessible Action page and registry source could not be fetched here; the optional CTA uses the supplied LinkedIn URL instead.
-- `npx tsc --noEmit` and `npm run lint` passed on the case study layout. No tests or browser preview were run per project policy.
+- useLayouts Accessible Action page and registry source could not be fetched; the optional CTA uses LinkedIn directly.
+- `npx tsc --noEmit` and `npm run lint` passed for this content update. No tests or browser preview were run per project policy.
 - Earlier `npm run build` could not fetch IBM Plex Sans from Google Fonts; retry with network access.
-- `gh auth status` previously reported invalid tokens for both configured accounts; Git push via the repository credential helper works.
+- `gh auth status` previously reported invalid tokens for both configured accounts; Git push through the repository credential helper works.
