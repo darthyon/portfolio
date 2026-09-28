@@ -2,12 +2,12 @@
 
 ## Product
 
-A personal portfolio presented as a mock browser. It has an ID-card intro with contact actions, folder-based selected work, and a small Petronas Twin Towers builder. Show one screen at a time in a locked viewport. Support the screen switcher, wheel, swipe, keyboard, light/dark theme, and English/Bahasa Melayu.
+A personal portfolio presented as a mock browser. It has an ID-card intro with contact actions, folder-based selected work, and a small timed block-building game (spin for a Malaysian landmark, build it, compare with a block-built reference). Show one screen at a time in a locked viewport. Support the screen switcher, wheel, swipe, keyboard, light/dark theme, and English/Bahasa Melayu.
 
 ## Stack and boundaries
 
 - Next.js App Router, TypeScript, Tailwind CSS 4, and local shadcn/ui components.
-- Three.js is used only for the tower builder.
+- Three.js is used only for the Play block builder (`app/tower-builder.tsx`).
 - Use npm and the standard Next.js commands in `package.json`.
 - Keep the site frontend-only. Do not add a backend, authentication, visitor data, services, or persistence without approval.
 - Keep the portrait and employer marks replaceable. Do not invent contact URLs or a recipient email.
