@@ -49,7 +49,7 @@
   --card-shadow-subtle: 0 2px 8px rgb(38 59 99 / 4%), 0 12px 30px -14px rgb(38 59 99 / 13%);
   --folder-card-back: #f4f4f1;
   --folder-card-front: #d8d8d4;
-  --folder-card-edge: #a5a5a0;
+  --folder-card-edge: #d2d3d0;
   --folder-card-ink: #232321;
   --folder-card-muted: #595956;
   --radius-card: 22px;
@@ -76,7 +76,7 @@
   --card-shadow-subtle: 0 2px 8px rgb(0 0 0 / 12%), 0 14px 34px -14px rgb(0 0 0 / 32%);
   --folder-card-back: #393936;
   --folder-card-front: #242422;
-  --folder-card-edge: #686864;
+  --folder-card-edge: #4e504d;
   --folder-card-ink: #f4f4f1;
   --folder-card-muted: #c4c4be;
 }
