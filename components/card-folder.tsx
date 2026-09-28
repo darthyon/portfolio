@@ -46,7 +46,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
         type="button"
         className="card-folder group relative block h-full w-full cursor-pointer select-none overflow-hidden rounded-[30px] transform-gpu [backface-visibility:hidden] [contain:paint] [perspective:1000px]"
         style={{
-          border: `3px solid ${card.borderColor}`,
+          border: `1px solid ${card.borderColor}`,
           boxSizing: "border-box",
           backgroundColor: card.backgroundColor,
         }}
@@ -68,7 +68,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
         />
 
         <motion.div
-          className="pointer-events-none absolute left-1/2 top-[28%] z-10 flex w-[78%] -translate-x-1/2 justify-center transform-gpu will-change-[transform]"
+          className="pointer-events-none absolute left-1/2 top-[9%] z-10 flex w-[78%] -translate-x-1/2 justify-center transform-gpu will-change-[transform]"
           variants={{
             initial: { y: 0, scale: 0.96 },
             hover: { y: "-18%", scale: 1.08 },
@@ -100,11 +100,17 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
             viewBox="0 0 280 380"
             fill="none"
             preserveAspectRatio="none"
-            className="absolute inset-0 h-full w-full drop-shadow-[0_-10px_20px_rgba(0,0,0,0.15)]"
+            className="absolute inset-0 h-full w-full drop-shadow-[0_-8px_14px_rgba(0,0,0,0.11)]"
           >
+            <defs>
+              <linearGradient id={`folder-front-${id}`} x1="0" y1="0" x2="0.75" y2="1">
+                <stop offset="0%" stopColor="var(--folder-card-front-highlight)" />
+                <stop offset="100%" stopColor={card.folderColor} />
+              </linearGradient>
+            </defs>
             <path
               d="M 0,20 C 0,9 9,0 20,0 L 122,0 C 133,0 140,5.5 143.5,15 C 147,24.5 154,30 164,30 L 262,30 C 272,30 280,38 280,48 L 280,380 L 0,380 Z"
-              fill={card.folderColor}
+              fill={`url(#folder-front-${id})`}
             />
           </svg>
 
