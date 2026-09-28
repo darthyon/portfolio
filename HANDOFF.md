@@ -1,21 +1,23 @@
 # Handoff
 
 ## State
-- Branch: `codex/projects-card-folder-flow`; Explore has six monochrome CardFolder entries opening a shared scrollable case study layout.
-- Project lineup: WellUber, MyLorry, MyLorry Driver, CounselAI, Mindline, Sentient. The previous MySubsidi, Little tools, Interaction studies, and About entries are removed from Explore.
-- Five case studies use the owner's supplied insights, changes, artifact framing, and before → after results, with concise English/Bahasa Melayu copy.
-- Sentient is framed as learning Web3 onboarding and wallet mechanics; its detailed story is pending. Role/year/scope and real visuals remain marked as pending for every project.
-- The hero uses an abstract labelled placeholder instead of a fabricated product screenshot. The CTA uses the owner's supplied LinkedIn URL.
-- Wheel, touch, and keyboard input inside a case study scroll region do not switch portfolio screens.
-- Dark theme uses neutral black and charcoal surfaces, borders, artwork, and Play scene; primary blue remains on interactive actions.
+- Branch: `codex/populate-projects-folder` (from `main`). Local commits: `7cea133` tower fix and `6f8ab97` MyLorry Driver case study. WellUber and CounselAI work is uncommitted; preserve the working tree.
+- Modified: `app/portfolio-data.ts`, `components/screens/explore-screen.tsx`, `components/screens/narrative-gallery.tsx`, `app/globals.css`, and this file. New assets: `public/projects/welluber/*.webp`, `public/projects/counselai/*.webp`. Untracked `.claude/launch.json` (dev preview config).
+- Explore has six project folders. MyLorry Driver is committed as a five-beat English/Bahasa Melayu narrative with ten WebP screenshots, compact galleries, and a journey diagram.
+- WellUber is greenfield. Its uncommitted five-beat English/Bahasa Melayu story uses third-person, conversational copy. There is no old WellUber UI. Beat 2 shows a simple policy → entitlement → employee-view model above a wide gallery of two admin policy screenshots. Beats 3–4 show five employee-app screenshots in compact galleries. Beat 5 is text-only until exception evidence is supplied.
+- CounselAI uses a `showcase` layout (not `narrative`): intro line, `ScreenStack` (`components/screens/screen-stack.tsx`, motion drag + ←/→ keys + clickable 5-step flow), one reasoning line per step, closing. Analytics/file-cabinet screenshots deliberately unused. Galleries have no fill; phone frames use the 393:852 ratio.
+- WellUber and MyLorry Driver copy was rewritten in plain language (EN/BM); layouts unchanged.
+- WellUber beat 1 is text-only; the `process` visual was removed.
+- The two admin WebPs replaced the earlier policy/entitlement captures. The model now has equal-height, padded panels and centred arrows; full-width narrative beats allow copy to span the content column. Other projects and the case-study back/contact paths are unchanged.
 
 ## Next
-- Owner reviews six folders, case study content, scroll/back path, mobile layout, both themes, and both languages; check dark theme on Intro, Explore, case studies, Play, and contact dialog.
-- Supply real project visuals, role/year/scope, system artifacts, and Sentient insights/decisions/result.
-- Open PR to `main` when GitHub CLI authentication works: https://github.com/darthyon/portfolio/pull/new/codex/projects-card-folder-flow
+- Owner to supply a CounselAI role line (role, solo/team, duration) to show under the title. Populate MyLorry, Mindline and Sentient (not the old template). Owner to confirm CounselAI screenshot inconsistencies (see below).
+- Have the owner confirm WellUber factual claims. Ask for an organisation-switch state and a second organisation-specific Home screen, a paid “Amount to pay” state, and exception/process evidence before expanding beats 3–5.
+- Confirm that the contact details visible in WellUber Profile and MyLorry Driver old Account/new Profile, plus the WellUber voucher code, are suitable for public display.
+- Keep WellUber uncommitted until the owner requests a commit. Review the final diff before committing.
 
 ## Blockers-decisions
-- useLayouts Accessible Action page and registry source could not be fetched; the optional CTA uses LinkedIn directly.
-- `git diff --check`, `npx tsc --noEmit`, and `npm run lint` passed for the dark theme update. No tests or browser preview were run per project policy.
-- Earlier `npm run build` could not fetch IBM Plex Sans from Google Fonts; retry with network access.
-- `gh auth status` previously reported invalid tokens for both configured accounts; Git push through the repository credential helper works.
+- CounselAI screenshots contradict themselves: “Discriminatory Conduct” title vs expense-fraud summary; chat recommends Termination 94% while the panel says Formal Warning 81%.
+- The user rejected a two-row claims-versus-WellUber comparison as unclear. Keep the single product flow unless new evidence changes the story; do not imply an earlier WellUber product.
+- Latest `npm run lint`, `npx tsc --noEmit`, and `git diff --check` passed. No automated tests ran per repo policy. At the owner's explicit request, the open local page was visually inspected at desktop/mobile widths in English/Bahasa Melayu and light/dark themes; browser settings were restored.
+- A prior production build was unverified: Turbopack could not bind a worker port, and a Webpack retry could not fetch IBM Plex Sans from Google Fonts (`ENOTFOUND`).

@@ -30,3 +30,6 @@ yarn-error.log*
 
 # Tests and coverage
 /coverage
+
+# Local deployment CLI state
+.vercel

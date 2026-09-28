@@ -165,7 +165,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
@@ -199,7 +199,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
       scene.add(model);
       runtime = { THREE, scene, camera, renderer, model, floor, grid };
       runtimeRef.current = runtime;
-      host.replaceChildren(renderer.domElement);
+      host.append(renderer.domElement);
 
       const render = () => {
         if (!runtime) return;
@@ -230,7 +230,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
       renderRef.current = null;
       runtimeRef.current = null;
       runtime?.renderer.dispose();
-      host.replaceChildren();
+      runtime?.renderer.domElement.remove();
     };
     // The scene is created once; current state is read from heightsRef.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -294,7 +294,6 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
       <PortfolioCard className="builder-main">
         <div
           className="builder-canvas"
-          ref={mountRef}
           role="group"
           aria-label="Interactive 3D model of two buildable towers. Drag left or right to rotate the view."
           onPointerDown={onPointerDown}
@@ -302,6 +301,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
+          <div className="builder-renderer" ref={mountRef} aria-hidden="true" />
           {!sceneReady && !sceneFailed && <span className="canvas-loading">{copy.loading}</span>}
           {sceneFailed && (
             <div className="tower-fallback" role="img" aria-label={`Twin tower preview. Tower A: ${heights.west} levels. Tower B: ${heights.east} levels.`}>
