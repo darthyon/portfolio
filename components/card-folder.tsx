@@ -46,7 +46,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
         type="button"
         className="card-folder group relative block h-full w-full cursor-pointer select-none overflow-hidden rounded-[30px] transform-gpu [backface-visibility:hidden] [contain:paint] [perspective:1000px]"
         style={{
-          border: `1px solid ${card.borderColor}`,
+          border: `3px solid ${card.borderColor}`,
           boxSizing: "border-box",
           backgroundColor: card.backgroundColor,
         }}
