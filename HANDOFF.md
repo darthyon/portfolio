@@ -1,23 +1,24 @@
 # Handoff
 
 ## State
-- Branch: `codex/populate-projects-folder` (from `main`). Local commits: `7cea133` tower fix and `6f8ab97` MyLorry Driver case study. WellUber and CounselAI work is uncommitted; preserve the working tree.
-- Modified: `app/portfolio-data.ts`, `components/screens/explore-screen.tsx`, `components/screens/narrative-gallery.tsx`, `app/globals.css`, and this file. New assets: `public/projects/welluber/*.webp`, `public/projects/counselai/*.webp`. Untracked `.claude/launch.json` (dev preview config).
-- Explore has six project folders. MyLorry Driver is committed as a five-beat English/Bahasa Melayu narrative with ten WebP screenshots, compact galleries, and a journey diagram.
-- WellUber is greenfield. Its uncommitted five-beat English/Bahasa Melayu story uses third-person, conversational copy. There is no old WellUber UI. Beat 2 shows a simple policy → entitlement → employee-view model above a wide gallery of two admin policy screenshots. Beats 3–4 show five employee-app screenshots in compact galleries. Beat 5 is text-only until exception evidence is supplied.
-- CounselAI uses a `showcase` layout (not `narrative`): intro line, `ScreenStack` (`components/screens/screen-stack.tsx`, motion drag + ←/→ keys + clickable 5-step flow), one reasoning line per step, closing. Analytics/file-cabinet screenshots deliberately unused. Galleries have no fill; phone frames use the 393:852 ratio.
-- WellUber and MyLorry Driver copy was rewritten in plain language (EN/BM); layouts unchanged.
-- WellUber beat 1 is text-only; the `process` visual was removed.
-- The two admin WebPs replaced the earlier policy/entitlement captures. The model now has equal-height, padded panels and centred arrows; full-width narrative beats allow copy to span the content column. Other projects and the case-study back/contact paths are unchanged.
+- Branch: `feat/remaining-case-studies` (from `main` after PR #3 merged). Uncommitted: MyLorry case study; preserve the working tree. Untracked `.claude/launch.json` (dev preview config, owner undecided).
+- Case studies live in `app/portfolio-data.ts`. Two layouts:
+  - `narrative` (scrolling sections, any count): WellUber, MyLorry Driver, MyLorry. `screens` visuals accept `layout: "wide"` for desktop screenshots; wide galleries and phone galleries have no background box.
+  - `showcase` (CounselAI): intro line, `ScreenStack` (`components/screens/screen-stack.tsx`, motion drag, ←/→ keys, clickable five-step flow), one reasoning line per step, closing.
+- MyLorry: four sections (two text-only), calendar + new-appointment gallery, full-width trip planner. Assets in `public/projects/mylorry/`.
+- Copy is deliberately plain language for non-technical visitors, in English and Bahasa Melayu. Folder card summaries must fit one line on a 375px phone (about 31 characters).
+- Digital Identity Wallet (id `identity-wallet`): four sections, phone galleries. Screenshots were redacted from the real product (only the brand name, logo and branded URL removed; owner is fine with the sample username, display name and recovery words); never add the original product name anywhere, including ids, filenames or alt text.
+- Folder 06 is "Crafter" (id `crafter`), a crafting-notes game companion, not built yet. Its page shows a `comingSoon` empty state (hatching-chick emoji, “Still hatching” note); projects without `narrative`/`showcase` fall back to that view. The old placeholder template and Mindline were removed.
 
 ## Next
-- Owner to supply a CounselAI role line (role, solo/team, duration) to show under the title. Populate MyLorry, Mindline and Sentient (not the old template). Owner to confirm CounselAI screenshot inconsistencies (see below).
-- Have the owner confirm WellUber factual claims. Ask for an organisation-switch state and a second organisation-specific Home screen, a paid “Amount to pay” state, and exception/process evidence before expanding beats 3–5.
-- Confirm that the contact details visible in WellUber Profile and MyLorry Driver old Account/new Profile, plus the WellUber voucher code, are suitable for public display.
-- Keep WellUber uncommitted until the owner requests a commit. Review the final diff before committing.
+- Owner to review MyLorry on screen (not visually verified: browser navigation to localhost was denied).
+- Folder order: Applied: MyLorry Driver, CounselAI, WellUber, MyLorry Schedule, Digital Identity Wallet, Crafter.
+- Owner to supply a CounselAI role line (role, solo/team, duration).
+- Cleanup candidate: `story`, `CaseStudyStory`, `previewItems`, and old-template CSS/copy keys (`caseStudyRole`, `caseStudySituation`…) are now unused.
+- Folder sheets carry Fluent Emoji 3D (MIT; `public/projects/emoji/` with LICENSE.txt), set per project via `folderEmoji`.
 
 ## Blockers-decisions
-- CounselAI screenshots contradict themselves: “Discriminatory Conduct” title vs expense-fraud summary; chat recommends Termination 94% while the panel says Formal Warning 81%.
-- The user rejected a two-row claims-versus-WellUber comparison as unclear. Keep the single product flow unless new evidence changes the story; do not imply an earlier WellUber product.
-- Latest `npm run lint`, `npx tsc --noEmit`, and `git diff --check` passed. No automated tests ran per repo policy. At the owner's explicit request, the open local page was visually inspected at desktop/mobile widths in English/Bahasa Melayu and light/dark themes; browser settings were restored.
-- A prior production build was unverified: Turbopack could not bind a worker port, and a Webpack retry could not fetch IBM Plex Sans from Google Fonts (`ENOTFOUND`).
+- CounselAI screenshot case details are inconsistent; owner accepted this (do not raise again).
+- WellUber: owner to confirm factual claims, including "an employee can be linked to more than one employer".
+- `gh` active account is `yon-tug`; use `GH_TOKEN=$(gh auth token --user darthyon)` per command for `darthyon/portfolio`. CI status is checked manually by the owner.
+- No automated tests per repo policy; `npm run build` has not been run on this branch.

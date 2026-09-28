@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { ArrowLeft, ArrowRight, ClipboardCheck, MapPin, TrendingUp, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardFolder, type FolderCardData } from "@/components/card-folder";
-import { PortfolioCard } from "@/components/portfolio-card";
 import { NarrativeGallery } from "./narrative-gallery";
 import { ScreenStack } from "./screen-stack";
 import { linkedinUrl, projects, type CaseStudyNarrative, type CaseStudyShowcase, type PortfolioProject, type PortfolioProjectId } from "@/app/portfolio-data";
@@ -20,17 +20,6 @@ interface ExploreScreenProps {
 }
 
 const journeyIcons = [ClipboardCheck, Truck, MapPin, TrendingUp] as const;
-
-function ProjectPreview({ project, language }: { project: PortfolioProject; language: Language }) {
-  return (
-    <span className="project-preview" aria-hidden="true">
-      <strong>{project.title}</strong>
-      <span className="project-preview-terms">
-        {project.previewItems[language].map((item) => <span key={item}>{item}</span>)}
-      </span>
-    </span>
-  );
-}
 
 function NarrativeCaseStudy({
   title,
@@ -51,7 +40,7 @@ function NarrativeCaseStudy({
       </header>
       <div className="narrative-sequence">
         {narrative.beats.map((beat, index) => (
-          <section className={`narrative-beat${beat.visual?.kind === "model" ? " narrative-beat--model" : beat.visual ? "" : " narrative-beat--text-only"}`} aria-labelledby={`narrative-beat-${index}`} key={beat.title}>
+          <section className={`narrative-beat${beat.visual?.kind === "model" || (beat.visual?.kind === "screens" && beat.visual.layout === "wide") ? " narrative-beat--model" : beat.visual ? "" : " narrative-beat--text-only"}`} aria-labelledby={`narrative-beat-${index}`} key={beat.title}>
             <div className="narrative-copy">
               <h3 id={`narrative-beat-${index}`}>{beat.title}</h3>
               <p>{beat.text}</p>
@@ -70,7 +59,7 @@ function NarrativeCaseStudy({
                   })}
                 </ol>
               ) : beat.visual.kind === "screens" ? (
-                <NarrativeGallery screens={beat.visual.screens} copy={copy} />
+                <NarrativeGallery screens={beat.visual.screens} copy={copy} layout={beat.visual.layout} />
               ) : beat.visual.kind === "model" ? (
                 <div className="narrative-model">
                   <ol className="narrative-model-steps">
@@ -141,7 +130,7 @@ function ProjectCaseStudy({
   copy: SectionCopy;
   onBack: (projectId: PortfolioProjectId) => void;
 }) {
-  const { summary, category, story, narrative, showcase } = project.content[language];
+  const { category, narrative, showcase, comingSoon } = project.content[language];
   const backButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -165,78 +154,17 @@ function ProjectCaseStudy({
         ) : narrative ? (
           <NarrativeCaseStudy title={project.title} category={category} narrative={narrative} copy={copy} />
         ) : (
-        <>
-        <div className="case-study-layout">
-          <div className="case-study-copy">
-            <h2 id="case-study-title">{project.title}</h2>
-            <p className="case-study-summary">{story?.problem ?? summary}</p>
-            <p className="project-meta case-study-category">{category}</p>
-            <dl className="case-study-facts">
-              <div><dt>{copy.caseStudyRole}</dt><dd>{copy.caseStudyPending}</dd></div>
-              <div><dt>{copy.caseStudyYear}</dt><dd>{copy.caseStudyPending}</dd></div>
-              <div><dt>{copy.caseStudyScope}</dt><dd>{copy.caseStudyPending}</dd></div>
-            </dl>
-          </div>
-          <PortfolioCard role="img" elevation="subtle" className="case-study-artwork" aria-label={`${project.title} ${copy.caseStudyConceptPreview}`}>
-            <ProjectPreview project={project} language={language} />
-            <span className="case-study-visual-caption">{copy.caseStudyConceptPreview}</span>
-          </PortfolioCard>
+        <div className="case-study-wip">
+          {comingSoon && <Image className="case-study-wip-emoji" src={comingSoon.emoji} alt="" width={256} height={256} sizes="112px" unoptimized />}
+          <h2 id="case-study-title">{project.title}</h2>
+          <p className="project-meta case-study-category">{category}</p>
+          {comingSoon && (
+            <div className="case-study-wip-note">
+              <h3>{comingSoon.title}</h3>
+              <p>{comingSoon.text}</p>
+            </div>
+          )}
         </div>
-
-        <div className="case-study-story">
-          <section className="case-study-section" aria-labelledby="case-situation">
-            <span className="case-study-step">01</span>
-            <div><h3 id="case-situation">{copy.caseStudySituation}</h3><p className="case-study-pending">{story?.situation ?? copy.caseStudySituationPending}</p></div>
-          </section>
-          <section className="case-study-section" aria-labelledby="case-insights">
-            <span className="case-study-step">02</span>
-            <div>
-              <h3 id="case-insights">{copy.caseStudyInsights}</h3>
-              <ol className="case-study-list">{[0, 1, 2].map((index) => <li key={index}><span>0{index + 1}</span>{story?.insights[index] ?? copy.caseStudyInsightPending}</li>)}</ol>
-            </div>
-          </section>
-          <section className="case-study-section" aria-labelledby="case-decisions">
-            <span className="case-study-step">03</span>
-            <div>
-              <h3 id="case-decisions">{copy.caseStudyDecisions}</h3>
-              <div className="case-study-decision-grid">{[0, 1, 2].map((index) => (
-                <article key={index}>
-                  <div className="case-study-evidence">{copy.caseStudyVisualPending}</div>
-                  <h4>{story?.decisions[index].title ?? `${copy.caseStudyDecisionPending} 0${index + 1}`}</h4>
-                  <p>{story?.decisions[index].explanation ?? copy.caseStudyExplanationPending}</p>
-                </article>
-              ))}</div>
-            </div>
-          </section>
-          <section className="case-study-section" aria-labelledby="case-system">
-            <span className="case-study-step">04</span>
-            <div>
-              <h3 id="case-system">{copy.caseStudySystem}</h3>
-              <div className="case-study-system-slot">
-                <strong>{story?.artifact ?? copy.caseStudyArtifactPending}</strong>
-                <span>{copy.caseStudyArtifactVisualPending}</span>
-              </div>
-            </div>
-          </section>
-          <section className="case-study-section" aria-labelledby="case-result">
-            <span className="case-study-step">05</span>
-            <div>
-              <h3 id="case-result">{copy.caseStudyResult}</h3>
-              {story ? (
-                <div className="case-study-result-flow">
-                  <div><span>{copy.caseStudyBefore}</span><strong>{story.resultBefore}</strong></div>
-                  <ArrowRight size={20} aria-hidden="true" />
-                  <div><span>{copy.caseStudyAfter}</span><strong>{story.resultAfter}</strong></div>
-                </div>
-              ) : <p className="case-study-pending">{copy.caseStudyResultPending}</p>}
-            </div>
-          </section>
-          <section className="case-study-cta" aria-label={copy.caseStudyContactLabel}>
-            <h3>{copy.caseStudyContactTitle}</h3>
-            <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">{copy.caseStudyContactAction} <ArrowRight size={18} /></a>
-          </section>
-        </div>
-        </>
         )}
       </div>
     </div>
@@ -280,7 +208,7 @@ export function ExploreScreen({
                 borderColor: "var(--folder-card-edge)",
                 textColor: "var(--folder-card-ink)",
                 subTextColor: "var(--folder-card-muted)",
-                artwork: <span className="card-folder-project-art" aria-hidden="true"><ProjectPreview project={project} language={language} /></span>,
+                artwork: <span className="card-folder-project-art" aria-hidden="true"><span className="card-folder-sheet"><Image className="card-folder-emoji" src={project.folderEmoji} alt="" width={256} height={256} sizes="120px" unoptimized /></span></span>,
               };
 
               return (
