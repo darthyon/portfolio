@@ -185,23 +185,25 @@ button { color: inherit; }
 .section-heading { width: min(100%, 1260px); margin: 0 auto; }
 .section-heading h2 { margin: 0; color: var(--ink); font-size: clamp(34px, 5vw, 62px); font-weight: 700; letter-spacing: -.045em; line-height: 1.04; }
 .section-heading > p { margin: 12px 0 0; color: var(--muted); font-size: 18px; }
-.folder-grid { display: grid; width: min(100%, 1260px); min-height: 0; flex: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(155px, calc((100dvh - 310px) / 2)); align-content: center; gap: clamp(12px, 2vw, 24px); margin: 0 auto; }
+.explore-heading { width: min(100%, 960px); }
+.explore-heading h2 { font-size: clamp(28px, 3.2vw, 42px); }
+.folder-grid { display: grid; width: min(100%, 960px); min-height: 0; flex: 0 1 auto; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: clamp(170px, calc((100dvh - 360px) / 2), 250px); align-content: center; gap: clamp(12px, 1.6vw, 20px); margin: 0 auto; }
 .card-folder-wrap.portfolio-folder-card { width: 100%; min-width: 0; min-height: 0; }
 .card-folder { border-radius: 26px !important; box-shadow: var(--card-shadow-subtle); text-align: left; transition: box-shadow 180ms ease; }
 .card-folder:hover { box-shadow: var(--card-shadow-raised); }
 .card-folder:focus-visible { outline: 2px solid var(--folder-card-ink); outline-offset: 4px; }
-.card-folder-art { width: 100%; height: clamp(142px, 32dvh, 270px); }
+.card-folder-art { width: 100%; height: clamp(120px, 25dvh, 220px); }
 .card-folder-project-art { display: block; width: 100%; height: 100%; filter: grayscale(1); opacity: .92; }
 .card-folder-project-art .project-preview { width: 100%; height: 100%; min-height: 0; border-radius: 16px; background: linear-gradient(145deg, #f0f0ed, #babbb8); }
 .card-folder-project-art .phone-frame { transform: scale(1.45) rotate(-7deg); }
-.card-folder-symbol-art { display: grid; width: clamp(94px, 11vw, 142px); aspect-ratio: 1; place-items: center; border: 1px solid var(--folder-card-edge); border-radius: 28px; background: color-mix(in srgb, var(--folder-card-front) 62%, var(--folder-card-back)); color: var(--folder-card-ink); font-size: clamp(48px, 6vw, 76px); font-weight: 500; box-shadow: 0 14px 30px rgb(0 0 0 / 12%); }
-.card-folder-notes-art { display: flex; width: min(100%, 230px); min-height: 120px; flex-direction: column; justify-content: space-between; padding: 16px 18px; border: 1px solid var(--folder-card-edge); border-radius: 17px; background: repeating-linear-gradient(to bottom, var(--folder-card-back) 0, var(--folder-card-back) 24px, color-mix(in srgb, var(--folder-card-edge) 28%, var(--folder-card-back)) 25px); color: var(--folder-card-muted); font-size: 12px; font-weight: 600; box-shadow: 0 14px 30px rgb(0 0 0 / 12%); }
+.card-folder-symbol-art { display: grid; width: clamp(86px, 9vw, 120px); aspect-ratio: 1; place-items: center; border: 1px solid var(--folder-card-edge); border-radius: 24px; background: color-mix(in srgb, var(--folder-card-front) 62%, var(--folder-card-back)); color: var(--folder-card-ink); font-size: clamp(44px, 5vw, 66px); font-weight: 500; box-shadow: 0 14px 30px rgb(0 0 0 / 12%); }
+.card-folder-notes-art { display: flex; width: min(100%, 190px); min-height: 100px; flex-direction: column; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--folder-card-edge); border-radius: 17px; background: repeating-linear-gradient(to bottom, var(--folder-card-back) 0, var(--folder-card-back) 24px, color-mix(in srgb, var(--folder-card-edge) 28%, var(--folder-card-back)) 25px); color: var(--folder-card-muted); font-size: 12px; font-weight: 600; box-shadow: 0 14px 30px rgb(0 0 0 / 12%); }
 .card-folder-notes-art > span:last-child { display: flex; align-items: center; gap: 9px; color: var(--folder-card-ink); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 30px; }
 .card-folder-notes-art i { width: 28px; height: 1px; background: var(--folder-card-edge); }
-.card-folder-number { font-size: clamp(42px, 5.4vw, 68px) !important; }
-.card-folder-copy { padding: clamp(16px, 2vw, 26px) !important; }
-.card-folder-copy h3 { font-size: clamp(16px, 1.7vw, 22px) !important; line-height: 1.2 !important; }
-.card-folder-copy p { max-width: 92%; margin: 0; font-size: clamp(11px, 1vw, 14px) !important; line-height: 1.4 !important; }
+.card-folder-number { font-size: clamp(38px, 4vw, 54px) !important; }
+.card-folder-copy { padding: clamp(14px, 1.6vw, 20px) !important; }
+.card-folder-copy h3 { font-size: clamp(15px, 1.45vw, 19px) !important; line-height: 1.2 !important; }
+.card-folder-copy p { max-width: 92%; margin: 0; font-size: clamp(11px, .9vw, 13px) !important; line-height: 1.4 !important; }
 .folder-subpage { display: flex; width: min(100%, 1080px); min-height: 0; flex: 1; flex-direction: column; gap: 10px; margin: 0 auto; }
 .folder-subpage-back { width: fit-content; min-height: 36px; justify-content: flex-start; gap: 8px; padding: 0 10px; color: var(--muted); font-size: 13px; }
 .folder-subpage-card { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 0; overflow: auto; padding: clamp(22px, 4vw, 48px); border-radius: 25px; }
@@ -416,6 +418,7 @@ button { color: inherit; }
   .card-work-summary [data-slot="separator"] { margin-bottom: 10px; }
   .explore-screen, .play-screen { align-items: stretch; min-height: 0; gap: 13px; padding-right: 12px; padding-left: 12px; }
   .section-heading h2 { font-size: clamp(34px, 8vw, 49px); }
+  .explore-heading h2 { font-size: clamp(26px, 6vw, 34px); }
   .section-heading > p { font-size: 15px; }
   .folder-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-auto-rows: minmax(112px, calc((100dvh - 290px) / 3)); gap: 8px; }
   .card-folder-wrap.portfolio-folder-card { min-height: 0; }
@@ -511,6 +514,7 @@ button { color: inherit; }
   .card-work-summary [data-slot="separator"] { margin-bottom: 6px; }
   .explore-screen, .play-screen { gap: 8px; }
   .section-heading h2 { font-size: clamp(28px, 4vw, 44px); }
+  .explore-heading h2 { font-size: clamp(26px, 3vw, 38px); }
   .section-heading > p { margin-top: 4px; font-size: 12px; }
   .folder-grid { grid-auto-rows: minmax(104px, calc((100dvh - 290px) / 3)); }
   .card-folder-copy { gap: 2px !important; padding: 8px !important; }
