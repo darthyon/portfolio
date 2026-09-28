@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-sans",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Yon Yusuff — Product Designer & Builder",
@@ -17,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={ibmPlexSans.variable}>
+        {children}
+      </body>
     </html>
   );
 }
