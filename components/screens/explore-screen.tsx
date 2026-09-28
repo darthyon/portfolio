@@ -19,7 +19,7 @@ interface ExploreScreenProps {
 
 function ProjectPreview({ project, language }: { project: PortfolioProject; language: Language }) {
   return (
-    <span className={`project-preview ${project.color}`} aria-hidden="true">
+    <span className="project-preview" aria-hidden="true">
       <strong>{project.title}</strong>
       <span className="project-preview-terms">
         {project.previewItems[language].map((item) => <span key={item}>{item}</span>)}
@@ -52,7 +52,7 @@ function ProjectCaseStudy({
   }
 
   return (
-    <div className={`project-case-study ${project.color}`}>
+    <div className="project-case-study">
       <Button ref={backButtonRef} variant="ghost" className="case-study-back" onClick={handleBack}>
         <ArrowLeft size={17} />
         {copy.caseStudyBack}

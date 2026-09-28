@@ -24,7 +24,6 @@ export interface LocalizedProjectContent {
 export interface PortfolioProject {
   id: PortfolioProjectId;
   title: string;
-  color: "green" | "violet" | "amber";
   previewItems: Record<"en" | "bm", readonly [string, string, string]>;
   content: Record<"en" | "bm", LocalizedProjectContent>;
 }
@@ -59,7 +58,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "welluber",
     title: "WellUber",
-    color: "violet",
     previewItems: { en: ["Employer", "Balance", "Vouchers"], bm: ["Majikan", "Baki", "Baucar"] },
     content: {
       en: {
@@ -101,7 +99,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "mylorry",
     title: "MyLorry",
-    color: "amber",
     previewItems: { en: ["Exceptions", "Trip Planner", "Vehicles"], bm: ["Pengecualian", "Perancang", "Kenderaan"] },
     content: {
       en: {
@@ -143,7 +140,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "mylorry-driver",
     title: "MyLorry Driver",
-    color: "green",
     previewItems: { en: ["Trips", "Status", "Earnings"], bm: ["Perjalanan", "Status", "Pendapatan"] },
     content: {
       en: {
@@ -185,7 +181,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "counselai",
     title: "CounselAI",
-    color: "violet",
     previewItems: { en: ["Matter", "Evidence", "Response"], bm: ["Perkara", "Bukti", "Respons"] },
     content: {
       en: {
@@ -227,7 +222,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "mindline",
     title: "Mindline",
-    color: "green",
     previewItems: { en: ["Reflect", "Pace", "Boundaries"], bm: ["Refleksi", "Rentak", "Batasan"] },
     content: {
       en: {
@@ -269,7 +263,6 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "sentient",
     title: "Sentient",
-    color: "amber",
     previewItems: { en: ["Onboarding", "Wallet", "Learning"], bm: ["Pengenalan", "Dompet", "Pembelajaran"] },
     content: {
       en: { summary: "Learning Web3 onboarding and wallet mechanics through exploration.", category: "Web3 · Learning project", story: null },
