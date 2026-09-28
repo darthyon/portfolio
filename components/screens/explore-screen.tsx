@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardCheck, MapPin, TrendingUp, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardFolder, type FolderCardData } from "@/components/card-folder";
 import { PortfolioCard } from "@/components/portfolio-card";
-import { linkedinUrl, projects, type PortfolioProject, type PortfolioProjectId } from "@/app/portfolio-data";
+import { NarrativeGallery } from "./narrative-gallery";
+import { linkedinUrl, projects, type CaseStudyNarrative, type PortfolioProject, type PortfolioProjectId } from "@/app/portfolio-data";
 import { type Language, type SectionCopy } from "./copy";
 
 interface ExploreScreenProps {
@@ -17,6 +18,8 @@ interface ExploreScreenProps {
   onProjectSelect: (projectId: PortfolioProjectId) => void;
 }
 
+const journeyIcons = [ClipboardCheck, Truck, MapPin, TrendingUp] as const;
+
 function ProjectPreview({ project, language }: { project: PortfolioProject; language: Language }) {
   return (
     <span className="project-preview" aria-hidden="true">
@@ -25,6 +28,62 @@ function ProjectPreview({ project, language }: { project: PortfolioProject; lang
         {project.previewItems[language].map((item) => <span key={item}>{item}</span>)}
       </span>
     </span>
+  );
+}
+
+function NarrativeCaseStudy({
+  title,
+  category,
+  narrative,
+  copy,
+}: {
+  title: string;
+  category: string;
+  narrative: CaseStudyNarrative;
+  copy: SectionCopy;
+}) {
+  return (
+    <article className="case-study-narrative">
+      <header className="narrative-header">
+        <h2 id="case-study-title">{title}</h2>
+        <p className="project-meta case-study-category">{category}</p>
+      </header>
+      <div className="narrative-sequence">
+        {narrative.beats.map((beat, index) => (
+          <section className="narrative-beat" aria-labelledby={`narrative-beat-${index}`} key={beat.title}>
+            <div className="narrative-copy">
+              <h3 id={`narrative-beat-${index}`}>{beat.title}</h3>
+              <p>{beat.text}</p>
+            </div>
+            <figure className="narrative-visual">
+              {beat.visual.kind === "journey" ? (
+                <ol className="narrative-journey">
+                  {beat.visual.steps.map((step, stepIndex) => {
+                    const Icon = journeyIcons[stepIndex];
+                    return (
+                      <li key={step}>
+                        <span className="journey-node" aria-hidden="true"><Icon size={20} strokeWidth={1.8} /></span>
+                        <span className="journey-label">{step}</span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              ) : beat.visual.kind === "screens" ? (
+                <NarrativeGallery screens={beat.visual.screens} copy={copy} />
+              ) : (
+                <div className="narrative-visual-placeholder">{copy.caseStudyVisualPending}</div>
+              )}
+              <figcaption>{beat.visual.caption}{beat.visual.kind === "screens" && <span> · {copy.caseStudyOpenScreenshot}</span>}</figcaption>
+            </figure>
+          </section>
+        ))}
+      </div>
+      <blockquote className="narrative-closing"><p>{narrative.closing}</p></blockquote>
+      <section className="case-study-cta" aria-label={copy.caseStudyContactLabel}>
+        <h3>{copy.caseStudyContactTitle}</h3>
+        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">{copy.caseStudyContactAction} <ArrowRight size={18} /></a>
+      </section>
+    </article>
   );
 }
 
@@ -39,7 +98,7 @@ function ProjectCaseStudy({
   copy: SectionCopy;
   onBack: (projectId: PortfolioProjectId) => void;
 }) {
-  const { summary, category, story } = project.content[language];
+  const { summary, category, story, narrative } = project.content[language];
   const backButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -58,6 +117,10 @@ function ProjectCaseStudy({
         {copy.caseStudyBack}
       </Button>
       <div className="case-study-scroll" data-case-study-scroll role="region" tabIndex={0} aria-label={`${project.title} ${copy.caseStudy}`}>
+        {narrative ? (
+          <NarrativeCaseStudy title={project.title} category={category} narrative={narrative} copy={copy} />
+        ) : (
+        <>
         <div className="case-study-layout">
           <div className="case-study-copy">
             <h2 id="case-study-title">{project.title}</h2>
@@ -128,6 +191,8 @@ function ProjectCaseStudy({
             <a href={linkedinUrl} target="_blank" rel="noopener noreferrer">{copy.caseStudyContactAction} <ArrowRight size={18} /></a>
           </section>
         </div>
+        </>
+        )}
       </div>
     </div>
   );

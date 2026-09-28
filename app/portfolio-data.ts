@@ -15,10 +15,35 @@ export interface CaseStudyStory {
   resultAfter: string;
 }
 
+export interface CaseStudyScreenshot {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  label: string;
+}
+
+export type CaseStudyNarrativeVisual =
+  | { kind: "pending"; caption: string }
+  | { kind: "journey"; caption: string; steps: readonly [string, string, string, string] }
+  | { kind: "screens"; caption: string; screens: readonly [CaseStudyScreenshot, ...CaseStudyScreenshot[]] };
+
+export interface CaseStudyNarrativeBeat {
+  title: string;
+  text: string;
+  visual: CaseStudyNarrativeVisual;
+}
+
+export interface CaseStudyNarrative {
+  beats: readonly [CaseStudyNarrativeBeat, CaseStudyNarrativeBeat, CaseStudyNarrativeBeat, CaseStudyNarrativeBeat, CaseStudyNarrativeBeat];
+  closing: string;
+}
+
 export interface LocalizedProjectContent {
   summary: string;
   category: string;
   story: CaseStudyStory | null;
+  narrative?: CaseStudyNarrative;
 }
 
 export interface PortfolioProject {
@@ -53,6 +78,19 @@ export const contactChannels: readonly ContactChannel[] = [
     href: "mailto:yooneggy8@gmail.com",
   },
 ];
+
+const myLorryDriverScreens = {
+  oldCheckIn: { src: "/projects/mylorry-driver/old-check-in.webp", width: 780, height: 1688 },
+  oldHistory: { src: "/projects/mylorry-driver/old-check-in-history.webp", width: 780, height: 1614 },
+  oldTrips: { src: "/projects/mylorry-driver/old-trips.webp", width: 780, height: 1614 },
+  oldAccount: { src: "/projects/mylorry-driver/old-account.webp", width: 390, height: 1126 },
+  homeEmpty: { src: "/projects/mylorry-driver/home-not-clocked-in.webp", width: 393, height: 852 },
+  homeOnShift: { src: "/projects/mylorry-driver/home-on-shift.webp", width: 393, height: 852 },
+  trips: { src: "/projects/mylorry-driver/trips.webp", width: 393, height: 852 },
+  tripDetail: { src: "/projects/mylorry-driver/trip-detail.webp", width: 393, height: 852 },
+  profile: { src: "/projects/mylorry-driver/profile.webp", width: 393, height: 852 },
+  driverScore: { src: "/projects/mylorry-driver/driver-score.webp", width: 393, height: 1470 },
+} as const;
 
 export const projects: readonly PortfolioProject[] = [
   {
@@ -140,40 +178,128 @@ export const projects: readonly PortfolioProject[] = [
   {
     id: "mylorry-driver",
     title: "MyLorry Driver",
-    previewItems: { en: ["Trips", "Status", "Earnings"], bm: ["Perjalanan", "Status", "Pendapatan"] },
+    previewItems: { en: ["Shift", "Trips", "Driver Score"], bm: ["Syif", "Perjalanan", "Skor Pemandu"] },
     content: {
       en: {
-        summary: "A focused mobile experience for drivers in the field.",
+        summary: "A driver app shaped around the workday.",
         category: "Logistics · Mobile product design",
-        story: {
-          problem: "How can drivers understand trip status quickly while work is moving and interruptible?",
-          situation: "A desktop-derived workflow carried too much administrative detail into mobile use. Drivers needed quick status and earnings comprehension in conditions where attention and interaction time are limited.",
-          insights: ["Drivers need fast status comprehension.", "Earnings and status matter more than admin detail.", "Mobile interaction must survive movement and interruption."],
-          decisions: [
-            { title: "Simplify trip cards", explanation: "Reduced each card to the information needed for the next action." },
-            { title: "Strengthen status hierarchy", explanation: "Made trip status and earnings easier to find." },
-            { title: "Make detail collapsible", explanation: "Used scroll and collapse behaviour to reduce noise without hiding detail entirely." },
+        story: null,
+        narrative: {
+          beats: [
+            {
+              title: "The old app split the workday into screens",
+              text: "The old app was organised around Check-In, History, Trips and Account. Each feature worked, but drivers still had to piece together what came next.",
+              visual: {
+                kind: "screens", caption: "The old app separated the work into four destinations",
+                screens: [
+                  { ...myLorryDriverScreens.oldCheckIn, label: "Check-In", alt: "Old Check-In screen showing completed driver and vehicle checklists" },
+                  { ...myLorryDriverScreens.oldHistory, label: "Check-In History", alt: "Old Check-In History screen showing rejected and pending checklists" },
+                  { ...myLorryDriverScreens.oldTrips, label: "Trips", alt: "Old Trips screen showing an ongoing trip and ready-to-start trips" },
+                  { ...myLorryDriverScreens.oldAccount, label: "Account", alt: "Old Account screen showing achievements, rank and monthly record" },
+                ],
+              },
+            },
+            {
+              title: "The workday became the model",
+              text: "The redesign followed the rhythm of a driver's day: prepare, drive, arrive, improve. That sequence connected tasks that had previously lived in separate screens.",
+              visual: { kind: "journey", caption: "A driver's day", steps: ["Prepare", "Drive", "Arrive", "Improve"] },
+            },
+            {
+              title: "Home surfaced the next action",
+              text: "Home became a live state rather than a dashboard. It surfaces shift status, the current trip, the checklist and the next waypoint when each matters.",
+              visual: {
+                kind: "screens", caption: "Home responds to the driver's shift",
+                screens: [
+                  { ...myLorryDriverScreens.homeEmpty, label: "Not clocked in", alt: "MyLorry Driver Home showing a clock-in prompt above the current trip" },
+                  { ...myLorryDriverScreens.homeOnShift, label: "On shift", alt: "MyLorry Driver Home showing the active shift and a pending vehicle checklist" },
+                ],
+              },
+            },
+            {
+              title: "Location showed journey progress",
+              text: "Existing trip location data became a way to show where the driver is, what comes next, the ETA and how the journey is progressing.",
+              visual: {
+                kind: "screens", caption: "Trip progress across overview and detail",
+                screens: [
+                  { ...myLorryDriverScreens.trips, label: "Trips", alt: "Trips screen showing an active trip, waypoint progress and an upcoming trip" },
+                  { ...myLorryDriverScreens.tripDetail, label: "Trip Detail", alt: "Trip Detail screen showing the route, ETA, cargo and waypoint timeline" },
+                ],
+              },
+            },
+            {
+              title: "Performance became easier to understand",
+              text: "The redesign turned achievements and rank into driving insights tied to what happened on the road: route adherence, idle time, harsh braking and trip events.",
+              visual: {
+                kind: "screens", caption: "Profile context and Driver Score detail",
+                screens: [
+                  { ...myLorryDriverScreens.profile, label: "Profile", alt: "Driver Profile showing score, points and rank above personal information" },
+                  { ...myLorryDriverScreens.driverScore, label: "Driver Score", alt: "Driver Score showing performance breakdown, driving insights and a score trend" },
+                ],
+              },
+            },
           ],
-          artifact: "Trip state lifecycle",
-          resultBefore: "Desktop-derived workflow",
-          resultAfter: "Focused field-use experience",
+          closing: "The redesign didn’t remove the operational complexity. It reorganised it around the driver’s current state.",
         },
       },
       bm: {
-        summary: "Pengalaman mudah alih yang fokus untuk pemandu di lapangan.",
+        summary: "Aplikasi pemandu yang disusun mengikut hari kerja.",
         category: "Logistik · Reka bentuk produk mudah alih",
-        story: {
-          problem: "Bagaimana pemandu boleh memahami status perjalanan dengan cepat ketika kerja bergerak dan sering terganggu?",
-          situation: "Aliran kerja yang berasal dari desktop membawa terlalu banyak butiran pentadbiran ke telefon. Pemandu perlu memahami status dan pendapatan dengan cepat ketika masa dan perhatian terhad.",
-          insights: ["Pemandu perlu memahami status dengan cepat.", "Pendapatan dan status lebih penting daripada butiran pentadbiran.", "Interaksi mudah alih mesti tahan pergerakan dan gangguan."],
-          decisions: [
-            { title: "Permudah kad perjalanan", explanation: "Setiap kad dikurangkan kepada maklumat untuk tindakan seterusnya." },
-            { title: "Kuatkan hierarki status", explanation: "Status perjalanan dan pendapatan lebih mudah dicari." },
-            { title: "Jadikan butiran boleh dilipat", explanation: "Tatal dan lipat mengurangkan gangguan tanpa membuang butiran sepenuhnya." },
+        story: null,
+        narrative: {
+          beats: [
+            {
+              title: "Aplikasi lama memisahkan hari kerja kepada skrin",
+              text: "Aplikasi lama disusun mengikut Check-In, History, Trips dan Account. Setiap ciri berfungsi, tetapi pemandu masih perlu menentukan sendiri apa yang patut dibuat seterusnya.",
+              visual: {
+                kind: "screens", caption: "Aplikasi lama memisahkan kerja kepada empat bahagian",
+                screens: [
+                  { ...myLorryDriverScreens.oldCheckIn, label: "Check-In", alt: "Skrin Check-In lama menunjukkan senarai semak pemandu dan kenderaan yang selesai" },
+                  { ...myLorryDriverScreens.oldHistory, label: "Check-In History", alt: "Skrin Check-In History lama menunjukkan senarai semak ditolak dan menunggu kelulusan" },
+                  { ...myLorryDriverScreens.oldTrips, label: "Trips", alt: "Skrin Trips lama menunjukkan perjalanan yang sedang berlangsung dan yang sedia dimulakan" },
+                  { ...myLorryDriverScreens.oldAccount, label: "Account", alt: "Skrin Account lama menunjukkan pencapaian, kedudukan dan rekod bulanan" },
+                ],
+              },
+            },
+            {
+              title: "Hari kerja menjadi model baharu",
+              text: "Reka bentuk semula ini mengikut rentak hari kerja pemandu: bersedia, memandu, tiba dan tambah baik. Urutan itu menghubungkan tugas yang sebelum ini terpisah antara skrin.",
+              visual: { kind: "journey", caption: "Hari kerja pemandu", steps: ["Bersedia", "Memandu", "Tiba", "Tambah baik"] },
+            },
+            {
+              title: "Home menjelaskan tindakan seterusnya",
+              text: "Home menjadi paparan keadaan semasa, bukan sekadar papan pemuka. Status syif, perjalanan semasa, senarai semak dan hentian seterusnya muncul apabila diperlukan.",
+              visual: {
+                kind: "screens", caption: "Home berubah mengikut keadaan syif pemandu",
+                screens: [
+                  { ...myLorryDriverScreens.homeEmpty, label: "Belum mula syif", alt: "Home MyLorry Driver memaparkan gesaan mula syif di atas perjalanan semasa" },
+                  { ...myLorryDriverScreens.homeOnShift, label: "Sedang bertugas", alt: "Home MyLorry Driver memaparkan syif aktif dan senarai semak kenderaan yang belum selesai" },
+                ],
+              },
+            },
+            {
+              title: "Lokasi menunjukkan kemajuan perjalanan",
+              text: "Data lokasi sedia ada dalam Trips digunakan untuk menunjukkan kedudukan pemandu, destinasi seterusnya, anggaran masa ketibaan dan kemajuan perjalanan.",
+              visual: {
+                kind: "screens", caption: "Kemajuan perjalanan pada paparan senarai dan butiran",
+                screens: [
+                  { ...myLorryDriverScreens.trips, label: "Trips", alt: "Skrin Trips menunjukkan perjalanan aktif, kemajuan hentian dan perjalanan akan datang" },
+                  { ...myLorryDriverScreens.tripDetail, label: "Trip Detail", alt: "Skrin Trip Detail menunjukkan laluan, anggaran ketibaan, muatan dan garis masa hentian" },
+                ],
+              },
+            },
+            {
+              title: "Prestasi menjadi lebih mudah difahami",
+              text: "Reka bentuk semula ini mengubah pencapaian dan kedudukan menjadi gambaran pemanduan yang berkait dengan tingkah laku sebenar: pematuhan laluan, masa melahu, brek mengejut dan peristiwa perjalanan.",
+              visual: {
+                kind: "screens", caption: "Konteks profil dan butiran Skor Pemandu",
+                screens: [
+                  { ...myLorryDriverScreens.profile, label: "Profil", alt: "Profil pemandu menunjukkan skor, mata dan kedudukan di atas maklumat peribadi" },
+                  { ...myLorryDriverScreens.driverScore, label: "Skor Pemandu", alt: "Skor Pemandu menunjukkan pecahan prestasi, gambaran pemanduan dan trend skor" },
+                ],
+              },
+            },
           ],
-          artifact: "Kitaran keadaan perjalanan",
-          resultBefore: "Aliran kerja turunan desktop",
-          resultAfter: "Pengalaman fokus untuk kegunaan di lapangan",
+          closing: "Reka bentuk semula ini tidak menghapuskan kerumitan operasi. Ia menyusunnya semula mengikut keadaan semasa pemandu.",
         },
       },
     },
