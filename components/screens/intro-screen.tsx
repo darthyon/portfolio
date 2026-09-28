@@ -101,10 +101,6 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
               <rect width="1" height="1" fill="white" />
               <rect x="0.4575" y="0.027" width="0.085" height="0.02" rx="0.0125" ry="0.008" fill="black" />
             </mask>
-            <mask id="id-card-lanyard-depth" maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
-              <rect width="1" height="1" fill="white" />
-              <rect x="0.4575" y="0.021" width="0.085" height="0.02" rx="0.0125" ry="0.008" fill="black" />
-            </mask>
           </defs>
         </svg>
         <div className="id-card-surface" aria-hidden="true" />

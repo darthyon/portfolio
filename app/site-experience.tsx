@@ -14,7 +14,7 @@ import { ExploreScreen } from "@/components/screens/explore-screen";
 import { IntroScreen } from "@/components/screens/intro-screen";
 import { PlayScreen } from "@/components/screens/play-screen";
 import { screenCopy, screens, sectionCopy, type Language, type ScreenId } from "@/components/screens/copy";
-import { type FolderId } from "./portfolio-data";
+import { type PortfolioProjectId } from "./portfolio-data";
 
 const screenIndex = (screen: ScreenId) => screens.indexOf(screen);
 
@@ -22,8 +22,7 @@ export function SiteExperience() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>("intro");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [language, setLanguage] = useState<Language>("en");
-  const [activeFolder, setActiveFolder] = useState<FolderId | null>(null);
-  const [caseStudyProjectId, setCaseStudyProjectId] = useState<string | null>(null);
+  const [caseStudyProjectId, setCaseStudyProjectId] = useState<PortfolioProjectId | null>(null);
   const [builderStarted, setBuilderStarted] = useState(false);
   const lastWheelNavigation = useRef(0);
   const copy = sectionCopy[language];
@@ -54,6 +53,7 @@ export function SiteExperience() {
     function handleWheel(event: WheelEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
       if (target?.closest("dialog[open]")) return;
+      if (target?.closest("[data-case-study-scroll]")) return;
       if (target?.closest("input, textarea, select, [contenteditable='true']")) return;
       event.preventDefault();
       if (Math.abs(event.deltaY) < 24 || Date.now() - lastWheelNavigation.current < 760) return;
@@ -69,7 +69,7 @@ export function SiteExperience() {
     function handleTouchEnd(event: TouchEvent) {
       if (touchStartY === null) return;
       const target = touchTarget instanceof HTMLElement ? touchTarget : null;
-      if (target?.closest("dialog[open], input, textarea, select, .builder-canvas, [contenteditable='true']")) {
+      if (target?.closest("dialog[open], input, textarea, select, .builder-canvas, [data-case-study-scroll], [contenteditable='true']")) {
         touchStartY = null;
         touchTarget = null;
         return;
@@ -87,6 +87,7 @@ export function SiteExperience() {
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target instanceof HTMLElement ? event.target : null;
       if (target?.closest("dialog[open]")) return;
+      if (target?.closest("[data-case-study-scroll]")) return;
       if (target?.closest("input, textarea, select, button, a, [contenteditable='true']")) return;
       if (event.key === "PageDown" || event.key === "ArrowDown" || event.key === " ") {
         event.preventDefault();
@@ -141,13 +142,10 @@ export function SiteExperience() {
       <IntroScreen active={activeScreen === "intro"} copy={copy} language={language} />
       <ExploreScreen
         active={activeScreen === "explore"}
-        activeFolder={activeFolder}
         caseStudyProjectId={caseStudyProjectId}
         copy={copy}
         language={language}
         onCaseStudyBack={() => setCaseStudyProjectId(null)}
-        onFolderClose={() => setActiveFolder(null)}
-        onFolderSelect={setActiveFolder}
         onProjectSelect={setCaseStudyProjectId}
       />
       <PlayScreen

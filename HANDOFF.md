@@ -1,27 +1,21 @@
 # Handoff
 
 ## State
-- Portfolio rebuild and UI refinements are committed as `e2deb0f` (`Rebuild portfolio as local Next.js app`).
-- Pushed to GitHub: `main` and `refactor/local-nextjs` both point at `e2deb0f` on `origin`.
-- `origin` is `https://github.com/darthyon/portfolio.git`; the repository is private, as the owner requires.
-- Stack: Next.js App Router, TypeScript, Tailwind CSS 4, local shadcn/ui, npm; Three.js only for the tower builder.
-- Global screen, theme, language, and navigation state lives in `app/site-experience.tsx`; screen UI and shared copy live in `components/screens/`.
-- The app is frontend-only. The tower builder is interactive. Intro contact opens a dialog with LinkedIn and email, plus a LinkedIn prompt for visitors who need a phone number. No phone number, GitHub profile, or résumé link is published.
-- The remote's original placeholder `Initial commit` (`8e6f526`) was replaced by force-push; it is preserved locally as `backup/origin-main-initial`.
+- Branch: `codex/projects-card-folder-flow`; Explore has six monochrome CardFolder entries opening a shared scrollable case study layout.
+- Project lineup: WellUber, MyLorry, MyLorry Driver, CounselAI, Mindline, Sentient. The previous MySubsidi, Little tools, Interaction studies, and About entries are removed from Explore.
+- Five case studies use the owner's supplied insights, changes, artifact framing, and before → after results, with concise English/Bahasa Melayu copy.
+- Sentient is framed as learning Web3 onboarding and wallet mechanics; its detailed story is pending. Role/year/scope and real visuals remain marked as pending for every project.
+- The hero uses an abstract labelled placeholder instead of a fabricated product screenshot. The CTA uses the owner's supplied LinkedIn URL.
+- Wheel, touch, and keyboard input inside a case study scroll region do not switch portfolio screens.
+- Dark theme uses neutral black and charcoal surfaces, borders, artwork, and Play scene; primary blue remains on interactive actions.
 
 ## Next
-- Manually review screen navigation and fit on desktop, mobile, and short viewports.
-- Confirm profile and project copy, then replace portrait and employer assets when supplied.
-- Only add a public résumé link if the owner decides to share a downloadable PDF.
-- Delete the now-redundant `refactor/local-nextjs` remote branch if work continues on `main`.
+- Owner reviews six folders, case study content, scroll/back path, mobile layout, both themes, and both languages; check dark theme on Intro, Explore, case studies, Play, and contact dialog.
+- Supply real project visuals, role/year/scope, system artifacts, and Sentient insights/decisions/result.
+- Open PR to `main` when GitHub CLI authentication works: https://github.com/darthyon/portfolio/pull/new/codex/projects-card-folder-flow
 
 ## Blockers-decisions
-- Do not add a backend, persist visitor data, or invent contact details.
-- Do not reconnect this repository to Sites or change the hosted version without an explicit request.
-- Run `npm run lint`, `npx tsc --noEmit`, and `npm run build`; there is no test script and no browser preview in chat.
-
-## GitHub access
-- The owner uses `darthyon` for personal work and `yon-tug` for work, so `yon-tug` stays the globally active `gh` account.
-- This repository pins `darthyon` with a repository-local credential helper (`credential.https://github.com.helper`), because the global `gh` helper resolves to the active account and `yon-tug` returns 404 for this private repo. Do not remove it, and do not switch the global active account.
-- SSH: plain `git@github.com` is not registered on GitHub, so it fails with `Permission denied (publickey)`. The working keys are wired to the `github-darthyon` and `github-yon-tug` aliases in `~/.ssh/config`.
-- An earlier session reported invalid `gh` tokens and no repo access. That was an agent sandbox that could not read the macOS Keychain or reach the SSH agent, not an account problem; both accounts authenticate correctly on the host.
+- useLayouts Accessible Action page and registry source could not be fetched; the optional CTA uses LinkedIn directly.
+- `git diff --check`, `npx tsc --noEmit`, and `npm run lint` passed for the dark theme update. No tests or browser preview were run per project policy.
+- Earlier `npm run build` could not fetch IBM Plex Sans from Google Fonts; retry with network access.
+- `gh auth status` previously reported invalid tokens for both configured accounts; Git push through the repository credential helper works.

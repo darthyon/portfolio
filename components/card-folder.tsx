@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Transition } from "motion/react";
+import { motion, type Transition, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 export interface FolderCardData {
@@ -36,6 +36,8 @@ const gpuSpringTransition: Transition = {
 export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }: CardFolderProps) {
   const textColor = card.textColor ?? "#09090b";
   const subTextColor = card.subTextColor ?? "rgba(9, 9, 11, 0.65)";
+  const prefersReducedMotion = useReducedMotion();
+  const transition = prefersReducedMotion ? { duration: 0 } : gpuSpringTransition;
 
   return (
     <div className={`card-folder-wrap ${className ?? ""}`}>
@@ -44,7 +46,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
         type="button"
         className="card-folder group relative block h-full w-full cursor-pointer select-none overflow-hidden rounded-[30px] transform-gpu [backface-visibility:hidden] [contain:paint] [perspective:1000px]"
         style={{
-          border: 0,
+          border: `3px solid ${card.borderColor}`,
           boxSizing: "border-box",
           backgroundColor: card.backgroundColor,
         }}
@@ -62,7 +64,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
             initial: { scale: 1 },
             hover: { scale: 1.09 },
           }}
-          transition={gpuSpringTransition}
+          transition={transition}
         />
 
         <motion.div
@@ -71,11 +73,11 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
             initial: { y: 0, scale: 0.96 },
             hover: { y: "-18%", scale: 1.08 },
           }}
-          transition={gpuSpringTransition}
+          transition={transition}
         >
           <motion.div
-            animate={{ y: [0, -6, 0], rotate: [0, 1.5, -1.5, 0] }}
-            transition={{
+            animate={prefersReducedMotion ? { y: 0, rotate: 0 } : { y: [0, -6, 0], rotate: [0, 1.5, -1.5, 0] }}
+            transition={prefersReducedMotion ? { duration: 0 } : {
               duration: 4.8,
               repeat: Infinity,
               ease: "easeInOut",
@@ -92,7 +94,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
             initial: { y: 0 },
             hover: { y: "26%" },
           }}
-          transition={gpuSpringTransition}
+          transition={transition}
         >
           <svg
             viewBox="0 0 280 380"
@@ -119,7 +121,7 @@ export function CardFolder({ id, card, isOpen, ariaLabel, className, onSelect }:
               initial: { x: 0, scale: 1 },
               hover: { x: 4, scale: 1.15 },
             }}
-            transition={gpuSpringTransition}
+            transition={transition}
           >
             <svg
               viewBox="0 0 24 24"

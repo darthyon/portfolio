@@ -247,11 +247,11 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
     const runtime = runtimeRef.current;
     if (!runtime) return;
     const dark = theme === "dark";
-    const background = dark ? 0x1e2a3d : 0xeaf0f8;
+    const background = dark ? 0x1d1d1d : 0xeaf0f8;
     runtime.scene.background = new runtime.THREE.Color(background);
     if (runtime.scene.fog) runtime.scene.fog.color.setHex(background);
-    runtime.floor.material.color.setHex(dark ? 0x26364e : 0xf8fbff);
-    runtime.grid.material.color.setHex(dark ? 0x7c8ba3 : 0xffffff);
+    runtime.floor.material.color.setHex(dark ? 0x292929 : 0xf8fbff);
+    runtime.grid.material.color.setHex(dark ? 0x777777 : 0xffffff);
     renderRef.current?.();
   }, [theme]);
 
