@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import {
+  ArrowLeft,
   ArrowUpRight,
   ContactRound,
+  Download,
   FileText,
   Mail,
   MessageCircle,
@@ -17,6 +19,7 @@ import { CardContent } from "@/components/ui/card";
 import { contactChannels, linkedinUrl, profile, resumeUrl, type ContactChannelKind } from "@/app/portfolio-data";
 import type { Language, SectionCopy } from "./copy";
 import { PortfolioCard } from "@/components/portfolio-card";
+import { ResumePages } from "./resume-pages";
 
 interface IntroScreenProps {
   active: boolean;
@@ -50,6 +53,9 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const contactDialogRef = useRef<HTMLDialogElement>(null);
+  const [isResumeDialogOpen, setIsResumeDialogOpen] = useState(false);
+  const [resumeMode, setResumeMode] = useState<"native" | "drawn">("native");
+  const resumeDialogRef = useRef<HTMLDialogElement>(null);
   const displayRole = language === "en" ? profile.role : "Pereka produk / pembina";
 
   useEffect(() => {
@@ -59,6 +65,23 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
     if (isContactDialogOpen && !dialog.open) dialog.showModal();
     if (!isContactDialogOpen && dialog.open) dialog.close();
   }, [isContactDialogOpen, portalTarget]);
+
+  useEffect(() => {
+    const dialog = resumeDialogRef.current;
+    if (!dialog) return;
+
+    if (isResumeDialogOpen && !dialog.open) dialog.showModal();
+    if (!isResumeDialogOpen && dialog.open) dialog.close();
+  }, [isResumeDialogOpen, portalTarget]);
+
+  function handleResumeClick(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    // Phones either can't show PDFs inline or show them badly, so pdf.js draws it there.
+    const native = navigator.pdfViewerEnabled && !window.matchMedia("(hover: none)").matches;
+    setResumeMode(native ? "native" : "drawn");
+    setPortalTarget(document.body);
+    setIsResumeDialogOpen(true);
+  }
 
   function handleCardPointerMove(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -149,7 +172,7 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
               {copy.needToTalk}
             </Button>
             <Button asChild className="intro-view-resume">
-              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" aria-label={copy.viewResumeLabel}>
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" aria-label={copy.viewResumeLabel} onClick={handleResumeClick}>
                 <FileText size={16} strokeWidth={1.9} />
                 {copy.viewResume}
               </a>
@@ -216,6 +239,45 @@ export function IntroScreen({ active, copy, language }: IntroScreenProps) {
               </p>
             </div>
           </div>
+        </dialog>,
+        portalTarget,
+      )}
+      {portalTarget && createPortal(
+        <dialog
+          ref={resumeDialogRef}
+          className="resume-dialog"
+          aria-labelledby="resume-dialog-title"
+          onCancel={(event) => {
+            event.preventDefault();
+            setIsResumeDialogOpen(false);
+          }}
+          onClose={() => setIsResumeDialogOpen(false)}
+        >
+          <header className="resume-bar">
+            <Button
+              className="resume-back"
+              variant="ghost"
+              type="button"
+              onClick={() => setIsResumeDialogOpen(false)}
+            >
+              <ArrowLeft size={17} />
+              {copy.closeResumeDialog}
+            </Button>
+            <h2 id="resume-dialog-title">{copy.resumeDialogTitle}</h2>
+            {resumeMode === "drawn" && (
+              <Button asChild variant="ghost" className="resume-back resume-download">
+                <a href={resumeUrl} download>
+                  <Download size={17} />
+                  {copy.downloadResume}
+                </a>
+              </Button>
+            )}
+          </header>
+          {isResumeDialogOpen && (resumeMode === "native" ? (
+            <iframe className="resume-frame" src={`${resumeUrl}#view=FitH`} title={copy.resumeDialogTitle} />
+          ) : (
+            <ResumePages src={resumeUrl} loadingLabel={copy.resumeLoading} failedLabel={copy.resumeFailed} openLabel={copy.resumeOpen} />
+          ))}
         </dialog>,
         portalTarget,
       )}
