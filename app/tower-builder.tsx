@@ -312,6 +312,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
   const [sceneReady, setSceneReady] = useState(false);
   const [sceneFailed, setSceneFailed] = useState(false);
   const [rotation, setRotation] = useState(-0.55);
+  const [overPlane, setOverPlane] = useState(false);
   const copy = language === "en"
     ? {
         colors: { red: "Red", green: "Green", blue: "Blue" },
@@ -688,6 +689,7 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
     if (!pointer || pointer.pointerId !== event.pointerId) {
       if (event.pointerType === "mouse") {
         const cell = cellFromPointer(event);
+        if ((cell !== null) !== overPlane) setOverPlane(cell !== null);
         if (cell && (cell.x !== cursor.x || cell.z !== cursor.z || cell.level !== cursor.level)) setCursor(cell);
       }
       return;
@@ -733,9 +735,44 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
 
   return (
     <div className="builder-layout">
+      {phase === "spin" && (
+        <div className="spin-overlay" role="dialog" aria-modal="true" aria-label={copy.spinTitle}>
+          <div className="spin-card">
+            <h3>{copy.spinTitle}</h3>
+            <div className="reel" aria-hidden="true">
+              <div
+                className="reel-strip"
+                style={{
+                  transform: `translateY(${-(reelIndex - 1) * REEL_ITEM_HEIGHT}px)`,
+                  transitionDuration: `${reelDuration}ms`,
+                }}
+              >
+                {REEL_ITEMS.map((landmark, index) => (
+                  <span key={`${landmark.id}-${index}`} className="reel-item" data-active={!spinning && index === reelIndex && target !== null}>
+                    {landmark.name[language]}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <p className="sr-only" role="status">{target ? `${copy.landed} ${target.name[language]}` : spinning ? copy.spinning : ""}</p>
+            <div className="spin-actions">
+              {target ? (
+                <>
+                  <Button variant="outline" className="spin-secondary" onClick={spin}>{copy.spinAgain}</Button>
+                  <Button className="spin-primary" onClick={() => setPhase("idle")}>{copy.letsBuild}</Button>
+                </>
+              ) : (
+                <Button className="spin-primary" onClick={spin} disabled={spinning}>{spinning ? copy.spinning : copy.spin}</Button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       <PortfolioCard className="builder-main">
         <div
           className="builder-canvas"
+          data-over-plane={overPlane}
+          onPointerLeave={() => setOverPlane(false)}
           role="application"
           tabIndex={0}
           aria-label={copy.canvasLabel}
@@ -751,39 +788,6 @@ export function TowerBuilder({ language, theme }: { language: BuilderLanguage; t
           {!sceneReady && !sceneFailed && <span className="canvas-loading">{copy.loading}</span>}
           {sceneFailed && <span className="canvas-loading">{copy.failed}</span>}
           {target && phase !== "spin" && <Badge variant="outline" className="canvas-label">{target.name[language]}</Badge>}
-          {phase === "spin" && (
-            <div className="spin-overlay">
-              <div className="spin-card">
-                <h3>{copy.spinTitle}</h3>
-                <div className="reel" aria-hidden="true">
-                  <div
-                    className="reel-strip"
-                    style={{
-                      transform: `translateY(${-(reelIndex - 1) * REEL_ITEM_HEIGHT}px)`,
-                      transitionDuration: `${reelDuration}ms`,
-                    }}
-                  >
-                    {REEL_ITEMS.map((landmark, index) => (
-                      <span key={`${landmark.id}-${index}`} className="reel-item" data-active={!spinning && index === reelIndex && target !== null}>
-                        {landmark.name[language]}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <p className="sr-only" role="status">{target ? `${copy.landed} ${target.name[language]}` : spinning ? copy.spinning : ""}</p>
-                <div className="spin-actions">
-                  {target ? (
-                    <>
-                      <Button variant="outline" className="spin-secondary" onClick={spin}>{copy.spinAgain}</Button>
-                      <Button className="spin-primary" onClick={() => setPhase("idle")}>{copy.letsBuild}</Button>
-                    </>
-                  ) : (
-                    <Button className="spin-primary" onClick={spin} disabled={spinning}>{spinning ? copy.spinning : copy.spin}</Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
           <Badge variant="outline" className="canvas-timer" data-urgent={phase === "building" && secondsLeft <= 5}>
             <span className="sr-only">{copy.timer} </span>{formatSeconds(secondsLeft)}
           </Badge>
