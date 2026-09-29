@@ -428,6 +428,22 @@ button { color: inherit; }
 .contact-dialog-heading > span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; line-height: 1.45; }
 .contact-dialog-close { width: 44px; height: 44px; flex: 0 0 auto; margin: -5px -5px 0 0; border-radius: 11px; color: var(--muted); }
 .contact-dialog-close:hover { background: var(--hover-neutral); color: var(--ink); }
+.resume-dialog { position: fixed; inset: 0; display: flex; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; overflow: hidden; flex-direction: column; border: 0; background: var(--surface-soft); color: var(--ink); animation: contact-dialog-in 180ms cubic-bezier(.2,.8,.2,1) both; }
+.resume-dialog:not([open]) { display: none; }
+.resume-dialog::backdrop { background: rgb(14 22 37 / 46%); }
+.resume-bar { position: relative; display: flex; height: 48px; flex: 0 0 auto; align-items: center; padding: 0 8px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.resume-bar h2 { position: absolute; left: 50%; margin: 0; translate: -50% 0; color: var(--ink); font-size: 14px; font-weight: 700; pointer-events: none; }
+.resume-back { height: 36px; gap: 6px; padding: 0 10px; border-radius: 9px; color: var(--ink); font-size: 13px; font-weight: 650; }
+.resume-back:hover { background: var(--hover-neutral); }
+.resume-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.resume-frame { display: block; width: 100%; min-height: 0; flex: 1; border: 0; }
+.resume-download { margin-left: auto; }
+@media (max-width: 560px) { .resume-bar h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+.resume-scroll { position: relative; min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 12px; -webkit-overflow-scrolling: touch; }
+.resume-pages { display: flex; width: min(100%, 860px); flex-direction: column; gap: 12px; margin: 0 auto; }
+.resume-page { display: block; width: 100%; height: auto; border-radius: 6px; background: #fff; box-shadow: var(--shadow-small); }
+.resume-message { position: absolute; inset: 0; display: grid; place-content: center; gap: 8px; margin: 0; padding: 24px; color: var(--muted); font-size: 14px; text-align: center; }
+.resume-message a { color: var(--accent); font-weight: 650; }
 .contact-method-list { display: grid; gap: 8px; margin-top: 22px; }
 .contact-method { display: flex; min-width: 0; min-height: 58px; align-items: center; gap: 11px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); color: var(--ink); text-decoration: none; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
 .contact-method:hover { transform: translateY(-1px); border-color: var(--line-strong); background: var(--hover-neutral); }
